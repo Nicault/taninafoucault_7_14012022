@@ -6,37 +6,44 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- au dessus : lien bootstrap à relier avant les autres fichiers css -->
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&family=Lato:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/0f2fe6ee64.js" crossorigin="anonymous"></script>
     <!-- <script src="script.js"></script> -->
 </head>
 
-<body class="container">
+<body>
     <header>
-        <img src="img/Vector.png" />
+        <img class="logo" src="img/Vector.png" alt="Logo"/>
         <h1>Les petits plats</h1>
     </header>
     <section>
-        <form> 
-            <input type="search" name="q" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
-            <button>
+        <form class="recherche"> 
+            <input type="search" id="searchBar" name="" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
+            <button id="searchButton">
                 <i class="fas fa-search"></i>
             </button>
           </form>
 
-          <form>
-            <button>
+          <form class="tri">
+            <button class="ingredients">
+                Ingrédients
                 <ul>
 
                 </ul>
             </button>
 
-            <button>
+            <button class="appareil">
+                Appareil
                 <ul>
 
                 </ul>
             </button>
 
-            <button>
+            <button class="ustensiles">
+                Ustensiles
                 <ul>
 
                 </ul>
@@ -48,5 +55,7 @@
 
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/factory.js"></script>
 </body>
 </html>
