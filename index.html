@@ -19,37 +19,37 @@
         <img class="logo" src="img/Vector.png" alt="Logo"/>
         <h1>Les petits plats</h1>
     </header>
-    <section>
+    <section class="sectionRecherche">
         <form class="recherche"> 
-            <input type="search" id="searchBar" name="" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
+            <input type="search" id="searchBar" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
             <button id="searchButton">
                 <i class="fas fa-search"></i>
             </button>
-          </form>
+        </form>
+        
+        <section class="sectionBoutons">
+            <form class="tri blue">
+                <input id="ingredients" class="element boutonFerme" type="search" placeholder="Ingredients" />
+                <button class="openButton" id="ingButton">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </form>
+        
+            
+            <form class="tri green">
+                <input id="appareil" class="element boutonFerme" type="search" placeholder="Appareil" />
+                <button class="openButton" id="appButton">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </form>
 
-          <form class="tri">
-            <button class="ingredients">
-                Ingrédients
-                <ul>
-
-                </ul>
-            </button>
-
-            <button class="appareil">
-                Appareil
-                <ul>
-
-                </ul>
-            </button>
-
-            <button class="ustensiles">
-                Ustensiles
-                <ul>
-
-                </ul>
-            </button>
-
-          </form>
+            <form class="tri red">
+                <input id="ustensiles" class="element boutonFerme" type="search" placeholder="Ustensiles" />
+                <button class="openButton" id="ustButton">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </form>
+        </section>
     </section>
     <main>
 
@@ -57,5 +57,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <script src="scripts/data.js"></script>
     <script src="scripts/factory.js"></script>
+    <script src="scripts/IngAppUs.js"></script>
 </body>
 </html>

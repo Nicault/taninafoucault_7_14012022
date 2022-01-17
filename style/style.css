@@ -74,36 +74,85 @@ h1{
     font-size: 32px;
 }
 
-
-.tri{
+.sectionBoutons {
+    display: flex;
     margin-bottom: 25px;
+
 }
 
-.ingredients, .appareil, .ustensiles{
+.boutonFerme{
     height: 69px;
     width: 170px;
-    margin-right: 25px;
+}
+
+.boutonOuvert{
+    width: 500px;
+    height: 500px;
+}
+
+#ingredients, #appareil, #ustensiles{
+
     border-radius: 5px;
     border: none; 
+    outline: none;
+    margin-right: 20px;
+
 
     font-family: 'Lato', sans-serif;
     color: white;
     font-size: 18px;
     font-weight: 700;
     line-height: 21.6px;
+    padding: 20px;
+
 }
 
-.ingredients{
+#ingredients{
     background-color: #3282F7;
 }
+#ingredients::placeholder{
+    opacity: 1;
+}
 
-.appareil{
+#appareil{
     background-color: #68D9A4;
 }
+#appareil::placeholder{
+    opacity: 1;
+}
 
-.ustensiles{
+#ustensiles{
     background-color: #ED6454;
 }
+#ustensiles::placeholder{
+    opacity: 1;
+}
+
+.openButton {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    color: white;
+    transform: translateX(-60px);
+    width: 40px;
+    height: 69px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 main{
     display: flex;
@@ -132,6 +181,7 @@ article img {
 
 article .txt {
     background-color: #E7E7E7;
+    border-radius: 0 0 5px 5px;
     height: 186px;
     width: 380px;
     position: absolute;
@@ -142,12 +192,16 @@ article .txt {
 .header{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 .nom{
     font-family: "Lato", sans-serif ;
     font-size: 18px;
     font-weight: 400;
     line-height: 21.6px;
+    max-width: 250px;
+    margin-bottom: 0;
+    position: absolute;
 }
 
 .temps{
@@ -155,6 +209,9 @@ article .txt {
     font-size: 18px;
     font-weight: 700;
     line-height: 21.6px;
+    position: absolute;
+    right: 20px;
+
 }
 
 .content{
@@ -162,37 +219,62 @@ article .txt {
     justify-content: space-between;
     font-weight: 400;
     font-size: 12px;
+    width: 340px;
+    position: absolute;
+    bottom: 20px;
 }
 
 .ingredientsListe{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     font-family: "Lato", sans-serif;
     line-height: 14.4px;
     height: 105px;
+    max-width: 160px;
+
     /* white-space: nowrap;
     overflow: hidden; */
-    overflow-wrap: break-word;
-    text-overflow: "";
+    /* overflow-wrap: break-word;
+    text-overflow: ""; */
 }
-.ingredientLi{
+/* .ingredientLi{ */
     /* white-space: nowrap; */
     /* overflow: hidden; */
-    overflow-wrap: break-word;
-    text-overflow: "";
+    /* overflow-wrap: break-word;
+    text-overflow: ""; */
         /* ATTENTION VOIR POUR EFFECTUER ELLIPSIS APRES MOT GRACE AU JS */
 
+/* } */
+
+.ingredientNom{
+    font-weight: 700;
 }
 
 .recette{
+    position: absolute;
+    right: 0px;
     width: 171px;
     font-family: "Roboto", sans-serif;
     line-height: 12px;
-    height: 109px;
+    height: auto;
+    max-height: 109px;
 
-    /* white-space: nowrap; */
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    overflow-wrap: break-word;
     text-overflow: ellipsis;
 
+    /* white-space: nowrap; */
+    /* overflow: hidden; */
+    /* overflow-wrap: break-word; */
+    /* text-overflow: ellipsis; */
+
     /* ATTENTION VOIR POUR EFFECTUER ELLIPSIS APRES POINT OU VIRGULE GRACE AU JS */
+}
+
+.rotate {
+    transform: rotate(180deg);
 }
 
