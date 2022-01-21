@@ -4,6 +4,8 @@ function recipeFactory(data) {
     function getRecipeCardDOM() {
 
         const article = document.createElement("article")
+        const a = document.createElement("a")
+        a.href = "#"
 
         const img = document.createElement("img")
         img.setAttribute("src", "img/img.png")
@@ -40,8 +42,9 @@ function recipeFactory(data) {
         recette.classList.add("recette")
         recette.textContent = description
 
-        article.appendChild(img)
-        article.appendChild(txt)
+        article.appendChild(a)
+        a.appendChild(img)
+        a.appendChild(txt)
         txt.appendChild(header)
         header.appendChild(nom)
         header.appendChild(temps)

@@ -14,8 +14,14 @@ ul, li {
     margin: 0;
 }
 
+a, a:hover{
+    text-decoration: none;
+    color: black;
+}
+
+
 body{
-    width: 1290px;
+    max-width: 1240px;
     margin: auto;
 }
 
@@ -23,9 +29,14 @@ header{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 50px;
     margin-bottom: 25px;
 } 
+
+.container {
+    padding: 0;
+}
 .logo{
     height: 46.292205810546875px;
     width: 50.48472595214844px;
@@ -48,17 +59,29 @@ h1{
 
 #searchBar{
     height: 69px;
-    width: 1240px;
+    width: 100%;
     border-radius: 5px;
     background-color: #E7E7E7;
     border: none;
     outline: none;
     padding: 25px;
+    padding-right: 69px;
 
     font-family: 'Lato', sans-serif;
     font-weight: 400px;
     font-size: 18px;
     line-height: 21.6px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#searchBar::placeholder{
+    opacity: 0.25;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #searchButton{
@@ -76,26 +99,29 @@ h1{
 
 .sectionBoutons {
     display: flex;
-    margin-bottom: 25px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
 
 }
 
 .boutonFerme{
     height: 69px;
     width: 170px;
+    border-radius: 5px;
 }
 
 .boutonOuvert{
-    width: 500px;
-    height: 500px;
+    width: 667px;
+    border-radius: 5px 5px 0 0;
 }
 
 #ingredients, #appareil, #ustensiles{
 
-    border-radius: 5px;
+   
     border: none; 
     outline: none;
     margin-right: 20px;
+    margin-bottom: 20px;
 
 
     font-family: 'Lato', sans-serif;
@@ -107,25 +133,25 @@ h1{
 
 }
 
-#ingredients{
+#ingredients, .blue .divOfCheckboxes, .sectionFiltres .blue{
     background-color: #3282F7;
 }
-#ingredients::placeholder{
+.element::placeholder{
     opacity: 1;
 }
 
-#appareil{
+
+#appareil, .green .divOfCheckboxes, .sectionFiltres .green{
     background-color: #68D9A4;
 }
-#appareil::placeholder{
-    opacity: 1;
-}
 
-#ustensiles{
+#ustensiles, .red .divOfCheckboxes, .sectionFiltres .red{
     background-color: #ED6454;
 }
-#ustensiles::placeholder{
-    opacity: 1;
+
+
+.opacityPH::placeholder{
+    opacity: 0.5;
 }
 
 .openButton {
@@ -143,21 +169,13 @@ h1{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 main{
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: center;
+    /* align-items: center; */
+    width: 1290px;
+    margin: auto;
 }
 
 
@@ -173,7 +191,7 @@ article{
 }
 
 article img {
-    width: 380px;
+    width: 100%;
     height: 178px;
     position: absolute;
     left: 0;
@@ -183,7 +201,7 @@ article .txt {
     background-color: #E7E7E7;
     border-radius: 0 0 5px 5px;
     height: 186px;
-    width: 380px;
+    width: 100%;
     position: absolute;
     bottom: 0;
     padding: 20px;
@@ -227,25 +245,13 @@ article .txt {
 .ingredientsListe{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     font-family: "Lato", sans-serif;
     line-height: 14.4px;
     height: 105px;
     max-width: 160px;
-
-    /* white-space: nowrap;
-    overflow: hidden; */
-    /* overflow-wrap: break-word;
-    text-overflow: ""; */
 }
-/* .ingredientLi{ */
-    /* white-space: nowrap; */
-    /* overflow: hidden; */
-    /* overflow-wrap: break-word;
-    text-overflow: ""; */
-        /* ATTENTION VOIR POUR EFFECTUER ELLIPSIS APRES MOT GRACE AU JS */
 
-/* } */
 
 .ingredientNom{
     font-weight: 700;
@@ -259,22 +265,159 @@ article .txt {
     line-height: 12px;
     height: auto;
     max-height: 109px;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 8;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    /* white-space: nowrap; */
-    /* overflow: hidden; */
-    /* overflow-wrap: break-word; */
-    /* text-overflow: ellipsis; */
-
-    /* ATTENTION VOIR POUR EFFECTUER ELLIPSIS APRES POINT OU VIRGULE GRACE AU JS */
 }
 
+
+
+
+
+.divOfCheckboxes{
+    display: none;
+    position: absolute;
+    transform: translateY(-20px);
+    z-index: 2;
+    max-width: 667px;
+    border-radius: 0 0 5px 5px;
+}
+
+.listOfCheckboxes{
+    color: white;
+    font-family: "Lato", sans-serif;
+    max-height: 328px;
+    padding: 0 19px;
+    font-size: 18px;
+    line-height: 21.6px;
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    border-radius: 0 0 5px 5px;
+}
+
+.listOfCheckboxes li{
+    width: 209px;
+    max-height: 22px;
+    margin-bottom: 10px;
+}
+
+.listOfCheckboxes li label{
+    cursor: pointer;
+    line-height: 22px;
+    /* padding: 8px; */
+}
+
+.listOfCheckboxes li label:hover{
+    font-weight: 700;
+}
+
+.checkbox{
+    display: none;
+}
+
+
+
+.sectionFiltres{
+    /* display: none; */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.newFiltre{
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 17px;
+    color: white;
+    padding: 10px 10px 10px 20px;
+    border-radius: 5px;
+
+    display: flex;
+    align-items: center;
+    height: 37px;
+    justify-content: space-between;  
+    margin-right: 15px;  
+    margin-bottom: 15px;
+}
+
+.newFiltre .far {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 37px;
+    width: 30px;
+    font-size: 20px;
+    margin-left: 13px; 
+    cursor: pointer;
+}
+
+
+
+
+.inputWidth {
+    width: 223px;
+}
+
+.marginBottom{
+    margin-bottom: 62px;
+}
+
+.opacity {
+    opacity: 0.8;
+}
 .rotate {
     transform: rotate(180deg);
 }
+.none {
+    display: none;
+}
+.block {
+    display: block;
+}
 
+
+@media screen and (max-width: 1281px){
+    body{
+        padding: 0 10px;
+    }
+    main {
+        width: auto;
+    }
+    article{
+        margin-right: 25px;
+        margin-left: 25px;
+    }
+    .sectionRecherche{
+        max-width: 810px;
+        margin: auto;
+
+    }
+}
+
+@media screen and (max-width: 910px) {
+  
+    .sectionRecherche, main{
+        max-width: 380px;
+    }
+    main{
+        flex-direction: column;
+    }
+    article{
+        max-width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .boutonOuvert, .divOfCheckboxes{
+        width: 380px;
+    }
+    .divOfCheckboxes{
+        overflow-y: scroll;
+        scrollbar-width: thin;
+    }
+    .listOfCheckboxes li label:hover{
+        font-weight: 400;
+    }
+    /* .listeOfCheckboxes > :last-child{
+        padding-bottom: 10px;
+    } */
+    /* bug firefox */
+
+}
