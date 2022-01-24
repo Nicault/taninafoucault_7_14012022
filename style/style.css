@@ -172,7 +172,7 @@ h1{
 main{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    /* justify-content: center; */
     /* align-items: center; */
     width: 1290px;
     margin: auto;
@@ -378,17 +378,19 @@ article .txt {
     body{
         padding: 0 10px;
     }
-    main {
-        width: auto;
-    }
+    
     article{
-        margin-right: 25px;
-        margin-left: 25px;
+        margin-right: 50px;
+        /* margin-left: 25px; */
     }
     .sectionRecherche{
         max-width: 810px;
         margin: auto;
-
+    }
+    main {
+        max-width: 860px;
+        /* margin: auto; */
+        transform: translateX(25px);
     }
 }
 
@@ -399,6 +401,7 @@ article .txt {
     }
     main{
         flex-direction: column;
+        transform: translateX(0);
     }
     article{
         max-width: 100%;

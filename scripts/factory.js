@@ -35,7 +35,6 @@ function recipeFactory(data) {
         createIngredientList(ingredients, ingredientsListe)
             
 
-        // ingredientsListe.textContent = ingredients
 
 
         const recette = document.createElement("div")
@@ -75,13 +74,15 @@ async function displayData(recipes) {
         const recipeCardDOM = recipeModel.getRecipeCardDOM()
         recipesSection.appendChild(recipeCardDOM);
     })
+    ellipsis()
+
 }
 
 async function init() {
     const { recipes } = await getRecipes()
     displayData(recipes)
-    // const { ingredients } = await getIngredients()
-    // displayData(ingredients)
+    
+
 }
 
 init()
@@ -107,3 +108,32 @@ function createIngredientList(ingredients, ingredientsListe) {
 
 
 
+
+// ellipsis à la dernière ponctuation
+
+function ellipsis() {
+    const recette = document.querySelectorAll(".recette")
+
+
+    for (let i = 0 ; i < recette.length ; i++ ) {
+        let textBase = recette[i].textContent
+        recette[i].textContent = ""
+        textCutted = textBase.split("", 210)
+        if (textCutted.length < 210) {
+            recette[i].textContent = textCutted.join('')
+        }
+        else {
+            let lastComma = textCutted.lastIndexOf(",")
+            let lastPoint = textCutted.lastIndexOf(".")
+            
+            if (lastComma < lastPoint) {
+                let newText = textCutted.slice(0, lastPoint +1)
+                recette[i].textContent = newText.join('') + " ..."
+            } else {
+                let newText = textCutted.slice(0, lastComma +1)
+                recette[i].textContent = newText.join('') + " ..."
+
+            }
+        }
+    }
+}

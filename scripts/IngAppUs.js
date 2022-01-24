@@ -1,31 +1,3 @@
-// ellipsis à la dernière ponctuation
-
-const recette = document.querySelectorAll(".recette")
-
-
-for (let i = 0 ; i < recette.length ; i++ ) {
-    let textBase = recette[i].textContent
-    recette[i].textContent = ""
-    textCutted = textBase.split("", 210)
-    if (textCutted.length < 210) {
-        recette[i].textContent = textCutted.join('')
-    }
-    else {
-        let lastComma = textCutted.lastIndexOf(",")
-        let lastPoint = textCutted.lastIndexOf(".")
-        
-        if (lastComma < lastPoint) {
-            let newText = textCutted.slice(0, lastPoint +1)
-            recette[i].textContent = newText.join('') + " ..."
-        } else {
-            let newText = textCutted.slice(0, lastComma +1)
-            recette[i].textContent = newText.join('') + " ..."
-
-        }
-    }
-}
-
-
 
 //  créer et remplir les tableaux d'ingredients, appareil et ustensiles
 
@@ -93,27 +65,30 @@ const inputButtons = document.querySelectorAll(".element")
 const triForm = document.querySelectorAll(".tri")
 
 
-
-for (let i = 0 ; i < openButtons.length ; i++) {
-    openButtons[i].addEventListener("click", function(e) {
-        e.preventDefault()
-
-        if (openChevron[i].classList.contains("rotate")) {
-            // si le bouton est ouvert, on le ferme et on s'arrete là
-            changeButtonStatut(i)  
-            return
-        }
-
-        for (let i = 0 ; i < inputButtons.length ; i++) {
-            if (openChevron[i].classList.contains("rotate")){
-                // si un autre bouton est ouvert, on le ferme
+function oneButtonAtATime() {
+    for (let i = 0 ; i < openButtons.length ; i++) {
+        openButtons[i].addEventListener("click", function(e) {
+            e.preventDefault()
+    
+            if (openChevron[i].classList.contains("rotate")) {
+                // si le bouton est ouvert, on le ferme et on s'arrete là
                 changeButtonStatut(i)  
-            } 
-        }
-        changeButtonStatut(i) 
-        // on ouvre le bouton 
-    })
+                return
+            }
+    
+            for (let i = 0 ; i < inputButtons.length ; i++) {
+                if (openChevron[i].classList.contains("rotate")){
+                    // si un autre bouton est ouvert, on le ferme
+                    changeButtonStatut(i)  
+                } 
+            }
+            changeButtonStatut(i) 
+            // on ouvre le bouton 
+        })
+    }
 }
+
+oneButtonAtATime()
 
 function changeButtonStatut(i) {
     for (let i = 0 ; i < inputButtons.length ; i++) {
@@ -258,7 +233,7 @@ let deleteFiltre
 let newFiltre
 
 const triElement = document.querySelectorAll("li label")
-
+// delete filters
 for (let i = 0 ; i < triElement.length ; i++) {
     triElement[i].addEventListener("click", function(e) {
         e.preventDefault() // pour ne pas créer l'element en double
@@ -303,6 +278,6 @@ function createFiltre(i) {
 
 }
 
-// delete filters
+
 
 
