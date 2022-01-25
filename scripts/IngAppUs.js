@@ -36,7 +36,8 @@ for (let recipe of recipes) {
 
 }
 
-
+// function fillList remplie les listes avec les données de data
+// une seule occurence !
 function fillList(listName, elementToAdd, newElement) {
 
     for (let i = 0 ; i < listName.length ; i++) {
@@ -55,8 +56,6 @@ function fillList(listName, elementToAdd, newElement) {
 
 // ouverture des menus bouttons (un seul à la fois) au click sur le chevron
 
-
-
 const sectionBoutons = document.querySelector(".sectionBoutons")
 
 const openButtons = document.querySelectorAll(".openButton")
@@ -65,51 +64,78 @@ const inputButtons = document.querySelectorAll(".element")
 const triForm = document.querySelectorAll(".tri")
 
 
-function oneButtonAtATime() {
-    for (let i = 0 ; i < openButtons.length ; i++) {
-        openButtons[i].addEventListener("click", function(e) {
-            e.preventDefault()
-    
-            if (openChevron[i].classList.contains("rotate")) {
-                // si le bouton est ouvert, on le ferme et on s'arrete là
+for (let i = 0 ; i < openButtons.length ; i++) {
+    openButtons[i].addEventListener("click", function(e) {
+        e.preventDefault()
+
+        if (inputButtons[i].classList.contains("boutonOuvert") ) {
+            // si le bouton est ouvert, on le ferme et on s'arrete là
+            changeButtonStatut(i)  
+            return
+        // } else if (!openChevron[i].classList.contains("rotate") && inputButtons[i].classList.contains("inputWidth")) {
+        //     changeButtonStatut(i)  
+            
+        }
+
+        for (let i = 0 ; i < inputButtons.length ; i++) {
+            if (inputButtons[i].classList.contains("boutonOuvert")){
+                // si un autre bouton est ouvert, on le ferme
                 changeButtonStatut(i)  
-                return
-            }
-    
-            for (let i = 0 ; i < inputButtons.length ; i++) {
-                if (openChevron[i].classList.contains("rotate")){
-                    // si un autre bouton est ouvert, on le ferme
-                    changeButtonStatut(i)  
-                } 
-            }
+            } 
+        }
+        // dans le cas specifique où l'input est selectionné mais le chevron est ouvert
+        if (openChevron[i].classList.contains("rotate") && inputButtons[i].classList.contains("inputWidth")) {
+            openChevron[i].classList.remove("rotate")
+            inputButtons[i].classList.remove("inputWidth")
+        } else {
+
             changeButtonStatut(i) 
             // on ouvre le bouton 
-        })
-    }
+
+        }
+
+    })
 }
 
-oneButtonAtATime()
 
+
+
+
+// le probleme viens de là, des if dans des if c'est jamais bons ! revoir ces deux fonctions pour qu'elles marchent ensemble changebuttonstatut + l'eventlistener du dessus
+
+
+// au click sur le chevron l'ouverture de la divOfCheckboxes se declenche 
 function changeButtonStatut(i) {
+   
+    // if (inputButtons[i].classList.contains("inputWidth") && openChevron[i].classList.contains("rotate")) {
+    //     inputButtons[i].classList.remove("inputWidth")
+    //     openChevron[i].classList.remove("rotate")
+    // } 
+    
     for (let i = 0 ; i < inputButtons.length ; i++) {
         if (inputButtons[i].classList.contains("inputWidth")) {
             // si une zone de texte est selectionnée, on la deselectionne
-            inputButtons[i].classList.toggle("inputWidth")
+            inputButtons[i].classList.remove("inputWidth")
+        } else if (inputButtons[i].classList.contains("inputWidth") && openChevron[i].classList.contains("rotate")) {
+            inputButtons[i].classList.remove("inputWidth")
+            openChevron[i].classList.remove("rotate")
+
         }
     }
-   
 
     divOfCheckboxes[i].classList.toggle("block")
     inputButtons[i].classList.toggle("boutonOuvert")
     openChevron[i].classList.toggle("rotate")
     sectionBoutons.classList.toggle("marginBottom")
     // inputButtons[i].classList.toggle("inputWidth")
+    
     modifyPlaceholder(i)  
 }
 
+
+
 // modification du bouton au click sur la zone de saisie
 // ATTENTION VOIR POUR RAJOUTER DES BACKGROUND POUR UN CLICK EXTERIEUR
-
 
 for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("click", function() {
@@ -118,8 +144,13 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
                 // si une zone de texte est selectionnée, on la deselctionne
                 inputButtons[i].classList.toggle("inputWidth")
             }
+            // si un bouton est ouvert, on le ferme
+            // if (inputButtons[i].classList.contains("boutonOuvert")){
+            //     changeButtonStatut(i)
+
+            // }
         }
-    if ( inputButtons[i].classList.contains("boutonOuvert")) {
+        if ( inputButtons[i].classList.contains("boutonOuvert")) {
         // si le bouton est deja ouvert, on ne fait rien
         return
     }
@@ -161,42 +192,52 @@ let newInput = []
 let listOfCheckboxes = []
 let divOfCheckboxes = []
 
-// crée les checkboxes par bloc de 10
+// crée les elements de liste par bloc de 10 pour adapter la taille de la hauteur
+
+for (let i = 0 ; i < triForm.length ; i++) {
+    divOfCheckboxes[i] = document.createElement("div")
+    divOfCheckboxes[i].classList.add("divOfCheckboxes")
+
+
+    listOfCheckboxes[i] = document.createElement("ul")
+    listOfCheckboxes[i].classList.add("listOfCheckboxes")
+
+    divOfCheckboxes[i].appendChild(listOfCheckboxes[i]) 
+    
+    triForm[i].appendChild(divOfCheckboxes[i])
+
+}
+
+
+
 
 function createListOfCheckboxes (listeName, triFormNumber){
-    divOfCheckboxes[triFormNumber] = document.createElement("div")
-    divOfCheckboxes[triFormNumber].classList.add("divOfCheckboxes")
-
-
-    listOfCheckboxes[triFormNumber] = document.createElement("ul")
-    listOfCheckboxes[triFormNumber].classList.add("listOfCheckboxes")
-
-    divOfCheckboxes[triFormNumber].appendChild(listOfCheckboxes[triFormNumber])
-
+    
 
     if (listeName.length > 29) {
-        for (let i = 0 ; i <= 29 ; i++) {
+        for (let i = 0 ; i <= 29 && i < listeName.length ; i++) {
 
             createCheckboxes(i, listeName, triFormNumber)
 
         }
     } else if (listeName.length > 19 && listeName.length < 29) {
-        for (let i = 0 ; i <= 19 ; i++) {
+        for (let i = 0 ; i <= 19 && i < listeName.length ; i++) {
 
             createCheckboxes(i, listeName, triFormNumber)
 
         }
     } else {
-        for (let i = 0 ; i <= 9 ; i++) {
+        for (let i = 0 ; i <= 9 && i < listeName.length ; i++) {
 
             createCheckboxes(i, listeName, triFormNumber)
 
         }
 
     }
-    triForm[triFormNumber].appendChild(divOfCheckboxes[triFormNumber])
 }
 
+
+// créé les checkboxes et les append aux elements de liste
 function createCheckboxes(i, listeName, triFormNumber) {
     newLiElement[i] = document.createElement("li")
     newLabel[i] = document.createElement("label")
@@ -217,9 +258,7 @@ createListOfCheckboxes(listeAppareils, 1)
 createListOfCheckboxes(listeUstensiles, 2)
 
 
-// crée la zone des filtres
-
-
+// crée la zone des tags
 
 const sectionRecherche = document.querySelector(".sectionRecherche")
 const sectionFiltres = document.createElement("div")
@@ -252,7 +291,7 @@ for (let i = 0 ; i < triElement.length ; i++) {
     })
 }
 
-// crée les filtres et ajoute la classe couleur du parent du parent du parent..
+// crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça !
 function createFiltre(i) {
 
     newFiltre = document.createElement("div")

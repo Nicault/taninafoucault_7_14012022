@@ -22,7 +22,7 @@
     </header>
     <section class="sectionRecherche">
         <form class="recherche"> 
-            <input type="search" id="searchBar" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
+            <input type="search" id="searchBar" autocomplete="off" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette">
             <button id="searchButton">
                 <i class="fas fa-search"></i>
             </button>
@@ -30,7 +30,7 @@
         
         <section class="sectionBoutons">
             <form class="tri blue">
-                <input id="ingredients" class="element boutonFerme" type="search" placeholder="Ingredients" />
+                <input id="ingredients" class="element boutonFerme" type="search" autocomplete="off" placeholder="Ingredients" />
                 <button class="openButton" id="ingButton">
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -38,14 +38,14 @@
         
             
             <form class="tri green">
-                <input id="appareil" class="element boutonFerme" type="search" placeholder="Appareil" />
+                <input id="appareil" class="element boutonFerme" type="search" autocomplete="off" placeholder="Appareil" />
                 <button class="openButton" id="appButton">
                     <i class="fas fa-chevron-down"></i>
                 </button>
             </form>
 
             <form class="tri red">
-                <input id="ustensiles" class="element boutonFerme" type="search" placeholder="Ustensiles" />
+                <input id="ustensiles" class="element boutonFerme" type="search" autocomplete="off" placeholder="Ustensiles" />
                 <button class="openButton" id="ustButton">
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -59,5 +59,6 @@
     <script src="scripts/data.js"></script>
     <script src="scripts/factory.js"></script>
     <script src="scripts/IngAppUs.js"></script>
+    <script src="scripts/bubbleSort.js"></script>
 </body>
 </html>

@@ -272,6 +272,7 @@ article .txt {
 
 
 .divOfCheckboxes{
+    width: 667px;
     display: none;
     position: absolute;
     transform: translateY(-20px);
@@ -303,6 +304,10 @@ article .txt {
     cursor: pointer;
     line-height: 22px;
     /* padding: 8px; */
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .listOfCheckboxes li label:hover{
@@ -351,7 +356,9 @@ article .txt {
 
 
 
-
+.borderRadius{
+    border-radius: 5px 5px 0 0;
+}
 .inputWidth {
     width: 223px;
 }

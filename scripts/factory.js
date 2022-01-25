@@ -35,8 +35,6 @@ function recipeFactory(data) {
         createIngredientList(ingredients, ingredientsListe)
             
 
-
-
         const recette = document.createElement("div")
         recette.classList.add("recette")
         recette.textContent = description
