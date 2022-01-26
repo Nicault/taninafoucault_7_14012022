@@ -70,68 +70,49 @@ for (let i = 0 ; i < openButtons.length ; i++) {
 
         if (inputButtons[i].classList.contains("boutonOuvert") ) {
             // si le bouton est ouvert, on le ferme et on s'arrete là
-            changeButtonStatut(i)  
+            closeAllButtonsAndInputs() 
+            // modifyPlaceholder(i)  
             return
-        // } else if (!openChevron[i].classList.contains("rotate") && inputButtons[i].classList.contains("inputWidth")) {
-        //     changeButtonStatut(i)  
-            
         }
-
-        for (let i = 0 ; i < inputButtons.length ; i++) {
-            if (inputButtons[i].classList.contains("boutonOuvert")){
-                // si un autre bouton est ouvert, on le ferme
-                changeButtonStatut(i)  
-            } 
-        }
-        // dans le cas specifique où l'input est selectionné mais le chevron est ouvert
-        if (openChevron[i].classList.contains("rotate") && inputButtons[i].classList.contains("inputWidth")) {
-            openChevron[i].classList.remove("rotate")
-            inputButtons[i].classList.remove("inputWidth")
-        } else {
-
-            changeButtonStatut(i) 
-            // on ouvre le bouton 
-
-        }
+        
+        // autrement on ouvre le bouton selectionné et on ferme les autres
+        openButton(i)
 
     })
 }
 
 
-
-
-
-// le probleme viens de là, des if dans des if c'est jamais bons ! revoir ces deux fonctions pour qu'elles marchent ensemble changebuttonstatut + l'eventlistener du dessus
-
-
-// au click sur le chevron l'ouverture de la divOfCheckboxes se declenche 
-function changeButtonStatut(i) {
-   
-    // if (inputButtons[i].classList.contains("inputWidth") && openChevron[i].classList.contains("rotate")) {
-    //     inputButtons[i].classList.remove("inputWidth")
-    //     openChevron[i].classList.remove("rotate")
-    // } 
-    
-    for (let i = 0 ; i < inputButtons.length ; i++) {
-        if (inputButtons[i].classList.contains("inputWidth")) {
-            // si une zone de texte est selectionnée, on la deselectionne
-            inputButtons[i].classList.remove("inputWidth")
-        } else if (inputButtons[i].classList.contains("inputWidth") && openChevron[i].classList.contains("rotate")) {
-            inputButtons[i].classList.remove("inputWidth")
+function closeAllButtonsAndInputs() {
+     for (let i = 0 ; i < inputButtons.length ; i++) {
+            if (inputButtons[i].classList.contains("boutonOuvert")){
+                // si un autre bouton est ouvert, on le ferme
+                inputButtons[i].classList.remove("boutonOuvert")
+              
+            } else if (inputButtons[i].classList.contains("inputWidth")) {
+                // si une zone de texte est selectionnée, on la deselectionne
+                inputButtons[i].classList.remove("inputWidth")
+            }
+            divOfCheckboxes[i].classList.remove("block")
             openChevron[i].classList.remove("rotate")
-
-        }
+            sectionBoutons.classList.remove("marginBottom")
+            modifyPlaceholder(i)
     }
-
-    divOfCheckboxes[i].classList.toggle("block")
-    inputButtons[i].classList.toggle("boutonOuvert")
-    openChevron[i].classList.toggle("rotate")
-    sectionBoutons.classList.toggle("marginBottom")
-    // inputButtons[i].classList.toggle("inputWidth")
-    
-    modifyPlaceholder(i)  
 }
 
+function openInput(i) {
+    closeAllButtonsAndInputs()
+    inputButtons[i].classList.add("inputWidth")
+}
+
+function openButton(i) {
+    closeAllButtonsAndInputs()
+    divOfCheckboxes[i].classList.add("block")
+    inputButtons[i].classList.add("boutonOuvert")
+    openChevron[i].classList.add("rotate")
+    sectionBoutons.classList.add("marginBottom")
+    modifyPlaceholder(i)  
+
+}
 
 
 // modification du bouton au click sur la zone de saisie
@@ -250,6 +231,8 @@ function createCheckboxes(i, listeName, triFormNumber) {
 
 
     listOfCheckboxes[triFormNumber].appendChild(newLiElement[i])
+
+    
 }
 
 
@@ -271,35 +254,46 @@ sectionRecherche.insertBefore(sectionFiltres, sectionBoutons)
 let deleteFiltre
 let newFiltre
 
-const triElement = document.querySelectorAll("li label")
+
 // delete filters
-for (let i = 0 ; i < triElement.length ; i++) {
-    triElement[i].addEventListener("click", function(e) {
-        e.preventDefault() // pour ne pas créer l'element en double
 
-        createFiltre(i)    
+function createAndDeleteFilters() {
+    
+    let triElement = document.querySelectorAll("li")
 
-        // on recherche et supprime les element ici car c'est là qu'on les a créés
-        deleteFiltre = document.querySelectorAll(".deleteFiltre") 
-        newFiltre = document.querySelectorAll(".newFiltre")
-        for (let i = 0 ; i < deleteFiltre.length ; i++) {
-            deleteFiltre[i].addEventListener("click", function(e) {
-                e.preventDefault
-                newFiltre[i].classList.add("none")
-            })
-        }   
-    })
+    for (let i = 0 ; i < triElement.length ; i++) {
+        triElement[i].addEventListener("click", function(e) {
+            e.preventDefault() // pour ne pas créer l'element en double
+    
+            createFiltre(i)  
+            triElement[i].classList.add("none")  
+    
+            // on recherche et supprime les element ici car c'est là qu'on les a créés
+            deleteFiltre = document.querySelectorAll(".deleteFiltre") 
+            newFiltre = document.querySelectorAll(".newFiltre")
+            for (let i = 0 ; i < deleteFiltre.length ; i++) {
+                deleteFiltre[i].addEventListener("click", function(e) {
+                    e.preventDefault
+                    newFiltre[i].classList.add("none")
+                })
+            }   
+        })
+    }
 }
 
-// crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça !
+createAndDeleteFilters ()
+
+// crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça si possible!
 function createFiltre(i) {
+
+    let triElement = document.querySelectorAll("li")
 
     newFiltre = document.createElement("div")
     newFiltre.classList.add("newFiltre")
     newFiltre.textContent = triElement[i].textContent
-    if (triElement[i].parentElement.parentElement.parentElement.parentElement.classList.contains("red")) {
+    if (triElement[i].parentElement.parentElement.parentElement.classList.contains("red")) {
         newFiltre.classList.add("red")
-    } else if (triElement[i].parentElement.parentElement.parentElement.parentElement.classList.contains("blue")) {
+    } else if (triElement[i].parentElement.parentElement.parentElement.classList.contains("blue")) {
         newFiltre.classList.add("blue")
     } else {
         newFiltre.classList.add("green")

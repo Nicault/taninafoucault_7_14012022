@@ -58,13 +58,67 @@ searchBar.addEventListener("input", function() {
     }
 })
 
-// filtre les recettes et les affiche
+// filtre les recettes via la barre de reherche et les affiche
 function filterRecipes() {
     let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
                                                         pureString(element.description).includes(pureString(searchBar.value)) || 
                                                         element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))    
     displayData(resultsArray)
 }
+
+// filtre les recettes via les tags et les affiche
+
+function filterRecipesByTag() {
+    let newFiltre = document.querySelectorAll(".newFiltre")
+
+    let resultsArray = []
+    // for (let i = 0 ; i < newFiltre.length ; i++) {
+
+        if (newFiltre[0].classList.contains("blue")) {
+            resultsArray = orderedRecipes.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[0].textContent))))
+        } else if (newFiltre[0].classList.contains("green")) {
+            resultsArray = orderedRecipes.filter(element => pureString(element.appliance).includes(pureString(newFiltre[0].textContent)))
+        } else {
+            resultsArray = orderedRecipes.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[0].textContent))))
+        }
+
+        for (let i = 1 ; i < newFiltre.length ; i++) {
+
+            if (newFiltre[i].classList.contains("blue")) {
+                resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent))))
+            } else if (newFiltre[i].classList.contains("green")) {
+                resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(newFiltre[i].textContent)))
+            } else {
+                resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))))
+            }
+
+        }
+
+       console.log(resultsArray)
+        // let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(newFiltre[i].textContent)) ||
+        //                                                     pureString(element.description).includes(pureString(newFiltre[i].textContent)) || 
+        //                                                     pureString(element.appliance).includes(pureString(newFiltre[i].textContent)) ||
+        //                                                     element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))) ||
+        //                                                     element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent)))) 
+        
+        // displayData(resultsArray)
+
+    // }   
+    displayData(resultsArray)
+}
+
+// ajout d'un event listener sur le declenchement de la création d'un filtre tag
+
+let triElement = document.querySelectorAll("li")
+
+for (let i = 0 ; i < triElement.length ; i++) {
+    triElement[i].addEventListener("click", function() {
+        recipesSection.innerHTML = ""
+        filterRecipesByTag()
+    })
+
+}
+
  
 
 let listOfLists = [orderedIngredients, orderedAppareils, orderedUstensiles]
@@ -75,6 +129,7 @@ let listOfLists = [orderedIngredients, orderedAppareils, orderedUstensiles]
 for (let i = 0 ; i < inputButtons.length ; i++ ) {
     inputButtons[i].addEventListener("input", function(e) {
         e.preventDefault()
+
         // oneButtonAtATime()
         if (!inputButtons[i].value.length) {
             listOfCheckboxes[i].innerHTML = ""
@@ -89,22 +144,9 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
                 divOfCheckboxes[i].classList.add("block")
             }
 
-            // if (inputButtons[i].classList.contains("inputWidth")) {
-            //     divOfCheckboxes[i].classList.add("block")
-            //     openChevron[i].classList.add("rotate")    
-            // }
-
-            // changeButtonStatut(i)
-            // l'element se deselectionne sans ça et c'est en décalé mais ce n'est pas la solution car autre probleme
-            // oneButtonAtATime()
-            // createFiltre(i)
-            // probleme avec le parent element de la fonction de base
-            
         } else {
             createListOfCheckboxes (listOfLists[i], i)
-            // créé un bug
-            // divOfCheckboxes[i].classList.remove("block")
-
+          
             openChevron[i].classList.remove("rotate")
         }
     })
@@ -114,6 +156,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
 function filterListe(i) {
     let resultsArray = listOfLists[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
     createListOfCheckboxes (resultsArray, i)
+    createAndDeleteFilters()
 }
 
 
@@ -122,11 +165,11 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("input", function() {
 
         if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length >= 3) {
-            // createListOfCheckboxes (listOfLists[i], i)
             divOfCheckboxes[i].classList.add("block")
             divOfCheckboxes[i].classList.add("inputWidth")
             inputButtons[i].classList.add("borderRadius")
             openChevron[i].classList.add("rotate")
+  
 
         } else if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length < 3) {
             divOfCheckboxes[i].classList.remove("block")
@@ -136,5 +179,5 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
 
         }
     })
-    
+
 }
