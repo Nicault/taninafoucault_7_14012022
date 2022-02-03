@@ -257,6 +257,38 @@ let newFiltre
 
 // delete filters
 
+// function createAndDeleteFilters() {
+    
+//     let triElement = document.querySelectorAll("li")
+
+//     for (let i = 0 ; i < triElement.length ; i++) {
+//         triElement[i].addEventListener("click", function(e) {
+//             e.preventDefault() // pour ne pas créer l'element en double
+    
+//             createFiltre(i)  
+//             triElement[i].classList.add("none")  
+    
+//             // on recherche et supprime les element ici car c'est là qu'on les a créés
+//             deleteFiltre = document.querySelectorAll(".deleteFiltre") 
+//             newFiltre = document.querySelectorAll(".newFiltre")
+//             for (let i = 0 ; i < deleteFiltre.length ; i++) {
+//                 deleteFiltre[i].addEventListener("click", function(e) {
+//                         // let triElement = document.querySelectorAll("li")
+
+//                     e.preventDefault()
+//                     // console.log()
+//                     // newFiltre[i].classList.add("none")
+//                     console.log(sectionFiltres)
+//                     console.log(newFiltre[i])
+
+//                     sectionFiltres.removeChild(e.target.parentNode)
+
+//                 })
+//             }   
+//         })
+//     }
+// }
+
 function createAndDeleteFilters() {
     
     let triElement = document.querySelectorAll("li")
@@ -265,28 +297,31 @@ function createAndDeleteFilters() {
         triElement[i].addEventListener("click", function(e) {
             e.preventDefault() // pour ne pas créer l'element en double
     
-            createFiltre(i)  
+            deleteFiltre = createFiltre(i)  
             triElement[i].classList.add("none")  
     
-            // on recherche et supprime les element ici car c'est là qu'on les a créés
-            deleteFiltre = document.querySelectorAll(".deleteFiltre") 
-            newFiltre = document.querySelectorAll(".newFiltre")
-            for (let i = 0 ; i < deleteFiltre.length ; i++) {
-                deleteFiltre[i].addEventListener("click", function(e) {
-                    e.preventDefault
-                    newFiltre[i].classList.add("none")
-                })
-            }   
+            // on recherche et supprime les element ici car c'est là qu'on les a créés            
+            deleteFiltre.addEventListener("click", function(e) {
+                // let triElement = document.querySelectorAll("li")
+
+                e.preventDefault()
+                // console.log()
+                // newFiltre[i].classList.add("none")
+                console.log(sectionFiltres)
+
+                sectionFiltres.removeChild(e.target.parentElement)
+
+            })
         })
     }
 }
 
-createAndDeleteFilters ()
+createAndDeleteFilters()
 
 // crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça si possible!
 function createFiltre(i) {
 
-    let triElement = document.querySelectorAll("li")
+    // let triElement = document.querySelectorAll("li")
 
     newFiltre = document.createElement("div")
     newFiltre.classList.add("newFiltre")
@@ -304,11 +339,10 @@ function createFiltre(i) {
     deleteFiltre.classList.add("deleteFiltre")
 
 
-
-    newFiltre.appendChild(deleteFiltre)
     sectionFiltres.appendChild(newFiltre)
+    newFiltre.appendChild(deleteFiltre)
 
-
+    return deleteFiltre
 }
 
 

@@ -47,15 +47,26 @@ function order(data) {
 
 // voir pour mixer ces deux fonctions !!
 
+
+
+
+
 //  filtre de la barre de recherche principale
 searchBar.addEventListener("input", function() {
     recipesSection.innerHTML = ""
+    listOfCheckboxes[1].innerHTML = ""
+
+    let recipesToDisplay = recipes
+    let applianceToDisplay = listeAppareils
 
     if (searchBar.value.length > 2) {
-        filterRecipes()
-    } else {
-        displayData(recipes)
-    }
+        recipesToDisplay = filterRecipes()
+        applianceToDisplay = filterAppliances(recipesToDisplay)
+        filterIngredients(recipes)
+    } 
+
+    displayData(recipesToDisplay)
+    createListOfCheckboxes(applianceToDisplay, 1)
 })
 
 // filtre les recettes via la barre de reherche et les affiche
@@ -63,8 +74,59 @@ function filterRecipes() {
     let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
                                                         pureString(element.description).includes(pureString(searchBar.value)) || 
                                                         element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))    
-    displayData(resultsArray)
+
+    return resultsArray    
 }
+
+function filterAppliances(recipes) {
+    let resultsAppareils = orderedAppareils.filter(element => recipes.some(el => el.appliance == element))
+    // console.log(resultsAppareils)
+
+    return resultsAppareils
+}
+
+function filterIngredients(recipes) {
+    let resultsIngredient = orderedIngredients.filter(element => recipes.ingredients.some(el => el.ingredient  == element))
+
+    console.log(resultsIngredient)
+}
+
+
+// filtre les filtre
+
+// createListOfCheckboxes (listeName, triFormNumber)
+// function createCheckboxes(i, listeName, triFormNumber) {
+//     newLiElement[i] = document.createElement("li")
+//     newLabel[i] = document.createElement("label")
+//     newInput[i] = document.createElement("input")
+//     newInput[i].classList.add("checkbox")
+//     newInput[i].setAttribute("type", "checkbox")
+//     newLabel[i].textContent = listeName[i]
+//     newLiElement[i].appendChild(newLabel[i])
+//     newLabel[i].appendChild(newInput[i])
+
+
+//     listOfCheckboxes[triFormNumber].appendChild(newLiElement[i])
+
+    
+// }
+
+// function filtreFiltres() {
+
+//     for (let i = 0 ; i < triFormNumber ; i++) {
+//         for (let j = 0 ; j < )
+//         let resultsArray = listOfLists[i].filter(element => pureString(element).includes(pureString(searchBar.value)) ||
+//         pureString(element.description).includes(pureString(searchBar.value)) || 
+//         element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))    
+//     createListOfCheckboxes (resultsArray, i)
+
+//     }
+
+// }
+
+
+
+
 
 // filtre les recettes via les tags et les affiche
 
@@ -94,7 +156,7 @@ function filterRecipesByTag() {
 
         }
 
-       console.log(resultsArray)
+    //    console.log(resultsArray)
         // let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(newFiltre[i].textContent)) ||
         //                                                     pureString(element.description).includes(pureString(newFiltre[i].textContent)) || 
         //                                                     pureString(element.appliance).includes(pureString(newFiltre[i].textContent)) ||
