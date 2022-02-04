@@ -252,46 +252,10 @@ sectionRecherche.insertBefore(sectionFiltres, sectionBoutons)
 // ajouter les elements de tri
 
 let deleteFiltre
-let newFiltre
-
-
-// delete filters
-
-// function createAndDeleteFilters() {
-    
-//     let triElement = document.querySelectorAll("li")
-
-//     for (let i = 0 ; i < triElement.length ; i++) {
-//         triElement[i].addEventListener("click", function(e) {
-//             e.preventDefault() // pour ne pas créer l'element en double
-    
-//             createFiltre(i)  
-//             triElement[i].classList.add("none")  
-    
-//             // on recherche et supprime les element ici car c'est là qu'on les a créés
-//             deleteFiltre = document.querySelectorAll(".deleteFiltre") 
-//             newFiltre = document.querySelectorAll(".newFiltre")
-//             for (let i = 0 ; i < deleteFiltre.length ; i++) {
-//                 deleteFiltre[i].addEventListener("click", function(e) {
-//                         // let triElement = document.querySelectorAll("li")
-
-//                     e.preventDefault()
-//                     // console.log()
-//                     // newFiltre[i].classList.add("none")
-//                     console.log(sectionFiltres)
-//                     console.log(newFiltre[i])
-
-//                     sectionFiltres.removeChild(e.target.parentNode)
-
-//                 })
-//             }   
-//         })
-//     }
-// }
-
+// let newFiltre
 function createAndDeleteFilters() {
     
-    let triElement = document.querySelectorAll("li")
+    triElement = document.querySelectorAll("li")
 
     for (let i = 0 ; i < triElement.length ; i++) {
         triElement[i].addEventListener("click", function(e) {
@@ -306,7 +270,6 @@ function createAndDeleteFilters() {
 
                 e.preventDefault()
                 // console.log()
-                // newFiltre[i].classList.add("none")
                 console.log(sectionFiltres)
 
                 sectionFiltres.removeChild(e.target.parentElement)

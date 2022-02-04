@@ -1,5 +1,5 @@
 
-// fonction pour enlever les espaces, accents, et carateres speciaux de la saisie et de la recherche
+// fonction pour enlever les accents, et carateres speciaux de la saisie et de la recherche
 function pureString(string) {
     return string.toLowerCase().normalize('NFD').replace(new RegExp("[^(a-zA-Z)]", "g"), '')
 }
@@ -7,11 +7,15 @@ function pureString(string) {
 const recipesSection = document.querySelector("main")
 const searchBar = document.querySelector("#searchBar")
 
+
+let arrayOfFilters = [listeIngredients, listeAppareils, listeUstensiles]
+
 // on tri les elements maintenent ou apres ? plutot apres non ? à voir...
 let orderedRecipes = orderRecipes(recipes)
 let orderedIngredients = order(listeIngredients)
 let orderedAppareils = order(listeAppareils)
 let orderedUstensiles = order(listeUstensiles)
+
 
 
 
@@ -48,142 +52,139 @@ function order(data) {
 // voir pour mixer ces deux fonctions !!
 
 
+// on crée les variables de tableaux triés
+let recipesToDisplay = recipes
+
+let ingredientsToDisplay = listeIngredients
+let applianceToDisplay = listeAppareils
+let ustensilesToDisplay = listeUstensiles
+
+let arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
+let arrayPfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
 
 
 
-//  filtre de la barre de recherche principale
-searchBar.addEventListener("input", function() {
+
+
+
+// affiche tous les elements
+
+function displayAllElements() {
+     // on efface tout
+     recipesSection.innerHTML = ""
+     for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
+         listOfCheckboxes[i].innerHTML = ""
+     }    
+
+    //  on affiche tout
+
+    displayData(recipes)
+    for (let i = 0 ; i < arrayPfOrderedFilters.length ; i++) {
+        createListOfCheckboxes(arrayOfFilters[i], i)
+    }
+}
+
+
+
+// affiche les elements apres les avoir filtré
+
+function displayFilteredElements() {
+    // on efface tout
     recipesSection.innerHTML = ""
-    listOfCheckboxes[1].innerHTML = ""
+    for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
+        listOfCheckboxes[i].innerHTML = ""
+    }   
 
-    let recipesToDisplay = recipes
-    let applianceToDisplay = listeAppareils
+    // on trie les tableaux
+    recipesToDisplay = filterRecipes()
+    applianceToDisplay = filterAppliances(recipesToDisplay)
+    ingredientsToDisplay = filterIngredients(recipesToDisplay)
+    ustensilesToDisplay = filterUstensils(recipesToDisplay)
 
-    if (searchBar.value.length > 2) {
-        recipesToDisplay = filterRecipes()
-        applianceToDisplay = filterAppliances(recipesToDisplay)
-        filterIngredients(recipes)
-    } 
 
+    // on les met à jour
+    arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
+
+    // on les affiche
     displayData(recipesToDisplay)
-    createListOfCheckboxes(applianceToDisplay, 1)
-})
 
-// filtre les recettes via la barre de reherche et les affiche
+    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
+        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+    }
+
+    createAndDeleteFilters()
+
+} 
+
+
+
+// filtre les recettes 
 function filterRecipes() {
-    let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
-                                                        pureString(element.description).includes(pureString(searchBar.value)) || 
-                                                        element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))    
+    let resultsArray = []
 
+    // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
+     resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
+                                                        pureString(element.description).includes(pureString(searchBar.value)) || 
+                                                        element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
+
+    // via les tags (en fonction de la cathégorie des tags, si une recette correspond, on garde)
+    newFiltre = document.querySelectorAll(".newFiltre")
+
+    for (let i = 0 ; i < newFiltre.length ; i++) {
+
+        if (newFiltre[i].classList.contains("blue")) {
+            resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent))))
+        }        
+        else if (newFiltre[i].classList.contains("green")) {
+            resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(newFiltre[i].textContent)))
+        } else {
+            resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))))
+        }
+    } 
     return resultsArray    
 }
 
+// filtre les filtres proposés par rapport à une liste de recette donnée
+
+function filterIngredients(recipes) {
+    let resultsIngredient = orderedIngredients.filter(ingredient => recipes.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient)  == pureString(ingredient))))
+
+    return resultsIngredient
+}
+
 function filterAppliances(recipes) {
-    let resultsAppareils = orderedAppareils.filter(element => recipes.some(el => el.appliance == element))
-    // console.log(resultsAppareils)
+    let resultsAppareils = orderedAppareils.filter(appareil => recipes.some(element => pureString(element.appliance) == pureString(appareil)))
 
     return resultsAppareils
 }
 
-function filterIngredients(recipes) {
-    let resultsIngredient = orderedIngredients.filter(element => recipes.ingredients.some(el => el.ingredient  == element))
+function filterUstensils(recipes) {
+    let resultsUstensils = orderedUstensiles.filter(ustensil => recipes.some(recipe => recipe.ustensils.some(element => pureString(element) == pureString(ustensil))))
 
-    console.log(resultsIngredient)
+    return resultsUstensils
 }
 
 
-// filtre les filtre
 
-// createListOfCheckboxes (listeName, triFormNumber)
-// function createCheckboxes(i, listeName, triFormNumber) {
-//     newLiElement[i] = document.createElement("li")
-//     newLabel[i] = document.createElement("label")
-//     newInput[i] = document.createElement("input")
-//     newInput[i].classList.add("checkbox")
-//     newInput[i].setAttribute("type", "checkbox")
-//     newLabel[i].textContent = listeName[i]
-//     newLiElement[i].appendChild(newLabel[i])
-//     newLabel[i].appendChild(newInput[i])
+//  filtre de la barre de recherche principale : à l'input on affiche unqiquement les recettes contenant le terme saisi
+//  puis, en fonction des recettes affichées on filtre les filtres à afficher (on supprime les filtres absents des recettes déjà affichées)
 
-
-//     listOfCheckboxes[triFormNumber].appendChild(newLiElement[i])
-
-    
-// }
-
-// function filtreFiltres() {
-
-//     for (let i = 0 ; i < triFormNumber ; i++) {
-//         for (let j = 0 ; j < )
-//         let resultsArray = listOfLists[i].filter(element => pureString(element).includes(pureString(searchBar.value)) ||
-//         pureString(element.description).includes(pureString(searchBar.value)) || 
-//         element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))    
-//     createListOfCheckboxes (resultsArray, i)
-
-//     }
-
-// }
-
-
-
-
-
-// filtre les recettes via les tags et les affiche
-
-function filterRecipesByTag() {
-    let newFiltre = document.querySelectorAll(".newFiltre")
-
-    let resultsArray = []
-    // for (let i = 0 ; i < newFiltre.length ; i++) {
-
-        if (newFiltre[0].classList.contains("blue")) {
-            resultsArray = orderedRecipes.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[0].textContent))))
-        } else if (newFiltre[0].classList.contains("green")) {
-            resultsArray = orderedRecipes.filter(element => pureString(element.appliance).includes(pureString(newFiltre[0].textContent)))
-        } else {
-            resultsArray = orderedRecipes.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[0].textContent))))
-        }
-
-        for (let i = 1 ; i < newFiltre.length ; i++) {
-
-            if (newFiltre[i].classList.contains("blue")) {
-                resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent))))
-            } else if (newFiltre[i].classList.contains("green")) {
-                resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(newFiltre[i].textContent)))
-            } else {
-                resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))))
-            }
-
-        }
-
-    //    console.log(resultsArray)
-        // let resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(newFiltre[i].textContent)) ||
-        //                                                     pureString(element.description).includes(pureString(newFiltre[i].textContent)) || 
-        //                                                     pureString(element.appliance).includes(pureString(newFiltre[i].textContent)) ||
-        //                                                     element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))) ||
-        //                                                     element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent)))) 
-        
-        // displayData(resultsArray)
-
-    // }   
-    displayData(resultsArray)
-}
+searchBar.addEventListener("input", function() {
+    if (searchBar.value.length > 2) {
+        displayFilteredElements()    
+    }
+})
 
 // ajout d'un event listener sur le declenchement de la création d'un filtre tag
 
-let triElement = document.querySelectorAll("li")
-
 for (let i = 0 ; i < triElement.length ; i++) {
     triElement[i].addEventListener("click", function() {
-        recipesSection.innerHTML = ""
-        filterRecipesByTag()
+        displayFilteredElements()
     })
-
 }
 
  
 
-let listOfLists = [orderedIngredients, orderedAppareils, orderedUstensiles]
 // rappel
 // createListOfCheckboxes (listeName, triFormNumber)
 // createCheckboxes(i, listeName, triFormNumber)
@@ -207,7 +208,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
             }
 
         } else {
-            createListOfCheckboxes (listOfLists[i], i)
+            createListOfCheckboxes (arrayPfOrderedFilters[i], i)
           
             openChevron[i].classList.remove("rotate")
         }
@@ -216,7 +217,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
 }
 
 function filterListe(i) {
-    let resultsArray = listOfLists[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+    let resultsArray = arrayPfOrderedFilters[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
     createListOfCheckboxes (resultsArray, i)
     createAndDeleteFilters()
 }
