@@ -53,7 +53,6 @@ function order(data) {
 
 // on crée les variables de tableaux triés
 let recipesToDisplay = recipes
-// let resultsArray = recipesToDisplay
 
 let ingredientsToDisplay = listeIngredients
 let applianceToDisplay = listeAppareils
@@ -107,17 +106,23 @@ function displayFilteredElements() {
     arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
 
     // on les affiche
-    displayData(recipesToDisplay)
-
-    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
-        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+    if (recipesToDisplay.length > 0) {
+        displayData(recipesToDisplay)
+    } else {
+        let message = document.createElement("div")
+        message.classList.add("message")
+        message.textContent = "Aucune recette ne correspond à votre recherche... Vous pouvez chercher 'tarte aux pommes', 'poisson', etc."
+        recipesSection.appendChild(message)
     }
 
+
+    messageAucunResultat()
     createAndDeleteFilters()
+
+
 
     for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
         listOfIngAppUs[i].addEventListener("click", function() {
-            console.log("coco")
             recipesToDisplay = filterRecipesTags(recipesToDisplay)
             displayFilteredElements()
         })
@@ -125,15 +130,11 @@ function displayFilteredElements() {
 
     for (let i = 0 ; i < deleteTags.length ; i++) {
         deleteTags[i].addEventListener("click", function() {
-            recipesToDisplay = orderedRecipes
+            recipesToDisplay = filterRecipesTags(orderedRecipes)
             displayFilteredElements()
         })
     }
 
-    // listOfTags = document.querySelectorAll(".newFiltre")
-    // console.log(listOfTags)
-    // deleteTags = document.querySelectorAll(".deleteFiltre")
-    // triElement = document.querySelectorAll(".listOfCheckboxes li")
 } 
 
 
@@ -162,7 +163,9 @@ function filterRecipesTags(currentOrderedRecipes) {
         } else if (listOfTags[i].classList.contains("red")){
             resultsArray = currentOrderedRecipes.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
         }
+
     } 
+
 
     return resultsArray   
 }
@@ -173,17 +176,29 @@ function filterRecipesTags(currentOrderedRecipes) {
 function filterIngredients(recipesToDisplay) {
     let resultsIngredient = orderedIngredients.filter(ingredient => recipesToDisplay.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient)  == pureString(ingredient))))
 
+    for (let i = 0 ; i < listOfTags.length ; i++) {
+        removeItemOnce(resultsIngredient, listOfTags[i].textContent)        
+    }
+
     return resultsIngredient
 }
 
 function filterAppliances(recipesToDisplay) {
     let resultsAppareils = orderedAppareils.filter(appareil => recipesToDisplay.some(element => pureString(element.appliance) == pureString(appareil)))
 
+    for (let i = 0 ; i < listOfTags.length ; i++) {
+        removeItemOnce(resultsAppareils, listOfTags[i].textContent)        
+    }
+
     return resultsAppareils
 }
 
 function filterUstensils(recipesToDisplay) {
     let resultsUstensils = orderedUstensiles.filter(ustensil => recipesToDisplay.some(recipe => recipe.ustensils.some(element => pureString(element) == pureString(ustensil))))
+
+    for (let i = 0 ; i < listOfTags.length ; i++) {
+        removeItemOnce(resultsUstensils, listOfTags[i].textContent)        
+    }
 
     return resultsUstensils
 }
@@ -203,22 +218,33 @@ function filterUstensils(recipesToDisplay) {
 //  puis, en fonction des recettes affichées on filtre les filtres à afficher (on supprime les filtres absents des recettes déjà affichées)
 
 searchBar.addEventListener("input", function() {
-    console.log("input")
-    if (searchBar.value.length > 2) {
+    if (searchBar.value.length > 2 ) {
+        if (listOfTags.length == 0) { 
          // on filtre les recettes à afficher par rapport aux données de recherche
-        recipesToDisplay = filterRecipesSearchBar(recipesToDisplay)
-        displayFilteredElements()    
-
+        recipesToDisplay = filterRecipesSearchBar(orderedRecipes)
+        displayFilteredElements()  
+        } else if (listOfTags.length > 0){
+        // on tri via la searchbar ce qui a deja ete trié via les tags
+        recipesToDisplay = filterRecipesSearchBar(filterRecipesTags(recipesToDisplay))
+        displayFilteredElements()
+        }    
     } else {
-        displayAllElements()
+        if (listOfTags.length > 0){
+            recipesToDisplay = filterRecipesSearchBar(filterRecipesTags(recipesToDisplay))
+            displayFilteredElements()
+        } else {
+            displayAllElements()
+        }
     }
 })
+
+
+
 
 // ajout d'un event listener sur le declenchement de la création d'un filtre tag
 
 for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
     listOfIngAppUs[i].addEventListener("click", function() {
-        console.log("coco")
         recipesToDisplay = filterRecipesTags(recipesToDisplay)
         displayFilteredElements()
     })
@@ -226,6 +252,8 @@ for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
 
 for (let i = 0 ; i < deleteTags.length ; i++) {
     deleteTags[i].addEventListener("click", function() {
+        console.log("croix")
+        recipesToDisplay = filterRecipesTags(orderedRecipes)
         displayFilteredElements()
     })
 }
@@ -241,13 +269,11 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
         e.preventDefault()
 
         // oneButtonAtATime()
-        if (!inputButtons[i].value.length) {
-            listOfCheckboxes[i].innerHTML = ""
-            filterListe(i)
-            
-        } else if (inputButtons[i].value.length){
-            listOfCheckboxes[i].innerHTML = ""
-            filterListe(i)
+        listOfCheckboxes[i].innerHTML = ""
+        filterListe(i)
+
+        if (inputButtons[i].value.length){
+           
 
             // si le bouton de saisie est ouvert, on block la div of checkboxes
             if (inputButtons[i].classList.contains("boutonOuvert")) {
@@ -255,7 +281,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
             }
 
         } else {
-            createListOfCheckboxes (arrayOfOrderedFilters[i], i)
+            createListOfCheckboxes (arrayOfFiltersToDisplay[i], i)
           
             openChevron[i].classList.remove("rotate")
         }
@@ -264,9 +290,18 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
 }
 
 function filterListe(i) {
-    let resultsArray = arrayOfOrderedFilters[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+    let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
     createListOfCheckboxes (resultsArray, i)
-    createAndDeleteFilters()
+    if (resultsArray.length) {
+        createAndDeleteFilters()
+    } else {
+        if (divOfCheckboxes[i].textContent == "") {
+        let messageListe = document.createElement("div")
+            messageListe.classList.add("messageListe")
+            messageListe.textContent = "Aucun resultat.."
+            divOfCheckboxes[i].appendChild(messageListe)   
+        }     
+    }
 }
 
 
@@ -291,3 +326,18 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
     })
 
 }
+
+
+
+function messageAucunResultat() {
+    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
+        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+        if (divOfCheckboxes[i].textContent == "") {
+            let messageListe = document.createElement("div")
+            messageListe.classList.add("messageListe")
+            messageListe.textContent = "Aucun resultat.."
+            divOfCheckboxes[i].appendChild(messageListe)
+        }
+    }
+}
+
