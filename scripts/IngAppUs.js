@@ -1,6 +1,8 @@
 
 //  créer et remplir les tableaux d'ingredients, appareil et ustensiles
 
+// ici on aurait pu utiliser new Set()
+
 
 let listeIngredients = [] 
 let listeAppareils = []
@@ -52,6 +54,16 @@ function fillList(listName, elementToAdd, newElement) {
         listName.push(newElement)
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 // ouverture des menus bouttons (un seul à la fois) au click sur le chevron
@@ -190,34 +202,16 @@ for (let i = 0 ; i < triForm.length ; i++) {
 }
 
 
-
-
+// on limite le nombre d'elements à 30
 function createListOfCheckboxes (listeName, triFormNumber){
-    
-
-    if (listeName.length > 29) {
-        for (let i = 0 ; i <= 29 && i < listeName.length ; i++) {
+        for (let i = 0 ; i < 30 && i < listeName.length ; i++) {
 
             createCheckboxes(i, listeName, triFormNumber)
 
-        }
-    } else if (listeName.length > 19 && listeName.length < 29) {
-        for (let i = 0 ; i <= 19 && i < listeName.length ; i++) {
-
-            createCheckboxes(i, listeName, triFormNumber)
-
-        }
-    } else {
-        for (let i = 0 ; i <= 9 && i < listeName.length ; i++) {
-
-            createCheckboxes(i, listeName, triFormNumber)
-
-        }
-
-    }
+        } 
 }
 
-
+let listOfIngAppUs = []
 // créé les checkboxes et les append aux elements de liste
 function createCheckboxes(i, listeName, triFormNumber) {
     newLiElement[i] = document.createElement("li")
@@ -230,9 +224,8 @@ function createCheckboxes(i, listeName, triFormNumber) {
     newLabel[i].appendChild(newInput[i])
 
 
-    listOfCheckboxes[triFormNumber].appendChild(newLiElement[i])
-
-    
+    listOfCheckboxes[triFormNumber].appendChild(newLiElement[i]) 
+    listOfIngAppUs.push(newLiElement[i])
 }
 
 
@@ -251,28 +244,35 @@ sectionRecherche.insertBefore(sectionFiltres, sectionBoutons)
 
 // ajouter les elements de tri
 
-let deleteFiltre
+// let deleteFiltre
 // let newFiltre
+
+// let triElement = []
+
+let listOfTags = []
+let deleteTags = []
+
 function createAndDeleteFilters() {
     
-    triElement = document.querySelectorAll("li")
+    triElement = document.querySelectorAll(".listOfCheckboxes li")
 
     for (let i = 0 ; i < triElement.length ; i++) {
         triElement[i].addEventListener("click", function(e) {
             e.preventDefault() // pour ne pas créer l'element en double
-    
+            listOfIngAppUs = []
             deleteFiltre = createFiltre(i)  
+            let selectedElement = triElement[i]
             triElement[i].classList.add("none")  
     
             // on recherche et supprime les element ici car c'est là qu'on les a créés            
             deleteFiltre.addEventListener("click", function(e) {
-                // let triElement = document.querySelectorAll("li")
 
                 e.preventDefault()
-                // console.log()
-                console.log(sectionFiltres)
-
+                selectedElement.classList.add("block")
                 sectionFiltres.removeChild(e.target.parentElement)
+
+                removeItemOnce(listOfTags, e.target.parentElement)
+                removeItemOnce(deleteTags, deleteFiltre)
 
             })
         })
@@ -284,19 +284,21 @@ createAndDeleteFilters()
 // crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça si possible!
 function createFiltre(i) {
 
-    // let triElement = document.querySelectorAll("li")
-
     newFiltre = document.createElement("div")
     newFiltre.classList.add("newFiltre")
     newFiltre.textContent = triElement[i].textContent
+    deleteFiltre = document.createElement("i")
+
     if (triElement[i].parentElement.parentElement.parentElement.classList.contains("red")) {
         newFiltre.classList.add("red")
+    
     } else if (triElement[i].parentElement.parentElement.parentElement.classList.contains("blue")) {
         newFiltre.classList.add("blue")
+
     } else {
         newFiltre.classList.add("green")
+
     }
-    deleteFiltre = document.createElement("i")
     deleteFiltre.classList.add("far")
     deleteFiltre.classList.add("fa-times-circle")
     deleteFiltre.classList.add("deleteFiltre")
@@ -305,9 +307,22 @@ function createFiltre(i) {
     sectionFiltres.appendChild(newFiltre)
     newFiltre.appendChild(deleteFiltre)
 
+    listOfTags.push(newFiltre)
+    deleteTags.push(deleteFiltre)
+
     return deleteFiltre
 }
 
 
 
+let newFiltre = document.querySelectorAll(".newFiltre")
+
+
+function removeItemOnce(array, value) {
+    let index = array.indexOf(value);
+    if (index > -1) {
+      array.splice(index, 1);
+    }
+    return array;
+  }
 

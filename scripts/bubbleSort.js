@@ -49,18 +49,18 @@ function order(data) {
     return orderedData
 }
 
-// voir pour mixer ces deux fonctions !!
 
 
 // on crée les variables de tableaux triés
 let recipesToDisplay = recipes
+// let resultsArray = recipesToDisplay
 
 let ingredientsToDisplay = listeIngredients
 let applianceToDisplay = listeAppareils
 let ustensilesToDisplay = listeUstensiles
 
 let arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
-let arrayPfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
+let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
 
 
 
@@ -77,11 +77,11 @@ function displayAllElements() {
      }    
 
     //  on affiche tout
-
     displayData(recipes)
-    for (let i = 0 ; i < arrayPfOrderedFilters.length ; i++) {
+    for (let i = 0 ; i < arrayOfFilters.length ; i++) {
         createListOfCheckboxes(arrayOfFilters[i], i)
     }
+    createAndDeleteFilters()
 }
 
 
@@ -95,8 +95,9 @@ function displayFilteredElements() {
         listOfCheckboxes[i].innerHTML = ""
     }   
 
-    // on trie les tableaux
-    recipesToDisplay = filterRecipes()
+    
+   
+    // on filtre les tableaux de tags par rapport aux recettes affichées
     applianceToDisplay = filterAppliances(recipesToDisplay)
     ingredientsToDisplay = filterIngredients(recipesToDisplay)
     ustensilesToDisplay = filterUstensils(recipesToDisplay)
@@ -114,55 +115,87 @@ function displayFilteredElements() {
 
     createAndDeleteFilters()
 
+    for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
+        listOfIngAppUs[i].addEventListener("click", function() {
+            console.log("coco")
+            recipesToDisplay = filterRecipesTags(recipesToDisplay)
+            displayFilteredElements()
+        })
+    }
+
+    for (let i = 0 ; i < deleteTags.length ; i++) {
+        deleteTags[i].addEventListener("click", function() {
+            recipesToDisplay = orderedRecipes
+            displayFilteredElements()
+        })
+    }
+
+    // listOfTags = document.querySelectorAll(".newFiltre")
+    // console.log(listOfTags)
+    // deleteTags = document.querySelectorAll(".deleteFiltre")
+    // triElement = document.querySelectorAll(".listOfCheckboxes li")
 } 
 
 
-
 // filtre les recettes 
-function filterRecipes() {
-    let resultsArray = []
-
+function filterRecipesSearchBar(currentOrderedRecipes) {
+    let resultsArray = currentOrderedRecipes
+  
     // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
-     resultsArray = orderedRecipes.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
-                                                        pureString(element.description).includes(pureString(searchBar.value)) || 
-                                                        element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
+     resultsArray = resultsArray.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
+                                                   pureString(element.description).includes(pureString(searchBar.value)) || 
+                                                   element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
 
-    // via les tags (en fonction de la cathégorie des tags, si une recette correspond, on garde)
-    newFiltre = document.querySelectorAll(".newFiltre")
+    return resultsArray   
+}
+    // via les tags (en fonction de la catégorie des tags, si une recette correspond, on garde)
+    // newFiltre = document.querySelectorAll(".newFiltre")
+    // console.log(newFiltre.length)
+function filterRecipesTags(currentOrderedRecipes) {
+    let resultsArray = currentOrderedRecipes
+    for (let i = 0 ; i < listOfTags.length ; i++) {
 
-    for (let i = 0 ; i < newFiltre.length ; i++) {
-
-        if (newFiltre[i].classList.contains("blue")) {
-            resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(newFiltre[i].textContent))))
-        }        
-        else if (newFiltre[i].classList.contains("green")) {
-            resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(newFiltre[i].textContent)))
-        } else {
-            resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(newFiltre[i].textContent))))
+        if (listOfTags[i].classList.contains("blue")) {
+            resultsArray = currentOrderedRecipes.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(listOfTags[i].textContent))))
+        }else if (listOfTags[i].classList.contains("green")) {
+            resultsArray = currentOrderedRecipes.filter(element => pureString(element.appliance).includes(pureString(listOfTags[i].textContent)))
+        } else if (listOfTags[i].classList.contains("red")){
+            resultsArray = currentOrderedRecipes.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
         }
     } 
-    return resultsArray    
+
+    return resultsArray   
 }
 
-// filtre les filtres proposés par rapport à une liste de recette donnée
 
-function filterIngredients(recipes) {
-    let resultsIngredient = orderedIngredients.filter(ingredient => recipes.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient)  == pureString(ingredient))))
+// filtre les filtres proposés par rapport aux recettes deja affichées
+
+function filterIngredients(recipesToDisplay) {
+    let resultsIngredient = orderedIngredients.filter(ingredient => recipesToDisplay.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient)  == pureString(ingredient))))
 
     return resultsIngredient
 }
 
-function filterAppliances(recipes) {
-    let resultsAppareils = orderedAppareils.filter(appareil => recipes.some(element => pureString(element.appliance) == pureString(appareil)))
+function filterAppliances(recipesToDisplay) {
+    let resultsAppareils = orderedAppareils.filter(appareil => recipesToDisplay.some(element => pureString(element.appliance) == pureString(appareil)))
 
     return resultsAppareils
 }
 
-function filterUstensils(recipes) {
-    let resultsUstensils = orderedUstensiles.filter(ustensil => recipes.some(recipe => recipe.ustensils.some(element => pureString(element) == pureString(ustensil))))
+function filterUstensils(recipesToDisplay) {
+    let resultsUstensils = orderedUstensiles.filter(ustensil => recipesToDisplay.some(recipe => recipe.ustensils.some(element => pureString(element) == pureString(ustensil))))
 
     return resultsUstensils
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -170,15 +203,29 @@ function filterUstensils(recipes) {
 //  puis, en fonction des recettes affichées on filtre les filtres à afficher (on supprime les filtres absents des recettes déjà affichées)
 
 searchBar.addEventListener("input", function() {
+    console.log("input")
     if (searchBar.value.length > 2) {
+         // on filtre les recettes à afficher par rapport aux données de recherche
+        recipesToDisplay = filterRecipesSearchBar(recipesToDisplay)
         displayFilteredElements()    
+
+    } else {
+        displayAllElements()
     }
 })
 
 // ajout d'un event listener sur le declenchement de la création d'un filtre tag
 
-for (let i = 0 ; i < triElement.length ; i++) {
-    triElement[i].addEventListener("click", function() {
+for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
+    listOfIngAppUs[i].addEventListener("click", function() {
+        console.log("coco")
+        recipesToDisplay = filterRecipesTags(recipesToDisplay)
+        displayFilteredElements()
+    })
+}
+
+for (let i = 0 ; i < deleteTags.length ; i++) {
+    deleteTags[i].addEventListener("click", function() {
         displayFilteredElements()
     })
 }
@@ -208,7 +255,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
             }
 
         } else {
-            createListOfCheckboxes (arrayPfOrderedFilters[i], i)
+            createListOfCheckboxes (arrayOfOrderedFilters[i], i)
           
             openChevron[i].classList.remove("rotate")
         }
@@ -217,7 +264,7 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
 }
 
 function filterListe(i) {
-    let resultsArray = arrayPfOrderedFilters[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+    let resultsArray = arrayOfOrderedFilters[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
     createListOfCheckboxes (resultsArray, i)
     createAndDeleteFilters()
 }
