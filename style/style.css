@@ -20,7 +20,9 @@ a, a:hover{
 }
 
 
-
+button {
+    cursor: pointer;
+}
 
 body{
     max-width: 1240px;
@@ -272,6 +274,9 @@ article .txt {
 
 
 .divOfCheckboxes{
+
+    overflow: hidden;
+
     width: 667px;
     display: none;
     position: absolute;
@@ -296,8 +301,13 @@ article .txt {
 
 .listOfCheckboxes li{
     width: 209px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-height: 22px;
     margin-bottom: 10px;
+    padding-right: 20px;
+
 }
 
 .listOfCheckboxes li label{
@@ -372,7 +382,7 @@ article .txt {
     color: white;
     font-family: "Lato", sans-serif;
     max-height: 328px;
-    padding: 20px;
+    padding: 0 19px 10px 19px;
     font-size: 18px;
     line-height: 21.6px;
     display: flex;
@@ -441,7 +451,7 @@ article .txt {
         margin-left: 0;
     }
     .boutonOuvert, .divOfCheckboxes{
-        width: 380px;
+        max-width: 380px;
     }
     .divOfCheckboxes{
         overflow-y: scroll;

@@ -10,11 +10,35 @@ const searchBar = document.querySelector("#searchBar")
 
 let arrayOfFilters = [listeIngredients, listeAppareils, listeUstensiles]
 
-// on tri les elements maintenent ou apres ? plutot apres non ? à voir...
-let orderedRecipes = orderRecipes(recipes)
-let orderedIngredients = order(listeIngredients)
-let orderedAppareils = order(listeAppareils)
-let orderedUstensiles = order(listeUstensiles)
+
+// on tri tous les elements par ordre alphabatique maintenent 
+
+let orderedRecipes = []
+for (let i = 0 ; i < recipes.length ; i++) {
+    orderedRecipes.push(recipes[i])
+}
+orderedRecipes = orderRecipes(orderedRecipes)
+
+
+
+function fillOrderedArrays(arrayToFill, model) {
+    arrayToFill = []
+    for (let i = 0 ; i < model.length ; i++) {
+        arrayToFill.push(model[i])
+    }
+
+    arrayToFill = order(arrayToFill)
+    return arrayToFill
+}
+
+let orderedIngredients = []
+orderedIngredients = fillOrderedArrays(orderedIngredients, listeIngredients)
+let orderedAppareils = []
+orderedAppareils = fillOrderedArrays(orderedAppareils, listeAppareils)
+let orderedUstensiles = []
+orderedUstensiles = fillOrderedArrays(orderedUstensiles, listeUstensiles)
+
+let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
 
 
 
@@ -52,14 +76,13 @@ function order(data) {
 
 
 // on crée les variables de tableaux triés
-let recipesToDisplay = recipes
+let recipesToDisplay = orderedRecipes
 
 let ingredientsToDisplay = listeIngredients
 let applianceToDisplay = listeAppareils
 let ustensilesToDisplay = listeUstensiles
 
 let arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
-let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
 
 
 
@@ -116,25 +139,27 @@ function displayFilteredElements() {
     }
 
 
-    messageAucunResultat()
-    createAndDeleteFilters()
+    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
+        if (arrayOfFiltersToDisplay[i].length > 0) {
+            createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+            messageListe[i].classList.remove("block")
+            
+        } else {
+            messageListe[i].classList.add("block")
+        }
+    }
 
+    createAndDeleteFilters()
 
 
     for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
         listOfIngAppUs[i].addEventListener("click", function() {
-            recipesToDisplay = filterRecipesTags(recipesToDisplay)
+            console.log("click element")
+            filterListe(i)
+            recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(recipesToDisplay))
             displayFilteredElements()
         })
     }
-
-    for (let i = 0 ; i < deleteTags.length ; i++) {
-        deleteTags[i].addEventListener("click", function() {
-            recipesToDisplay = filterRecipesTags(orderedRecipes)
-            displayFilteredElements()
-        })
-    }
-
 } 
 
 
@@ -150,22 +175,20 @@ function filterRecipesSearchBar(currentOrderedRecipes) {
     return resultsArray   
 }
     // via les tags (en fonction de la catégorie des tags, si une recette correspond, on garde)
-    // newFiltre = document.querySelectorAll(".newFiltre")
-    // console.log(newFiltre.length)
+  
 function filterRecipesTags(currentOrderedRecipes) {
     let resultsArray = currentOrderedRecipes
-    for (let i = 0 ; i < listOfTags.length ; i++) {
 
+    for (let i = 0 ; i < listOfTags.length ; i++) {
         if (listOfTags[i].classList.contains("blue")) {
-            resultsArray = currentOrderedRecipes.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(listOfTags[i].textContent))))
-        }else if (listOfTags[i].classList.contains("green")) {
-            resultsArray = currentOrderedRecipes.filter(element => pureString(element.appliance).includes(pureString(listOfTags[i].textContent)))
+            resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(listOfTags[i].textContent))))
+        } else if (listOfTags[i].classList.contains("green")) {
+            resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(listOfTags[i].textContent)))
         } else if (listOfTags[i].classList.contains("red")){
-            resultsArray = currentOrderedRecipes.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
+            resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
         }
 
     } 
-
 
     return resultsArray   
 }
@@ -246,35 +269,34 @@ searchBar.addEventListener("input", function() {
 for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
     listOfIngAppUs[i].addEventListener("click", function() {
         recipesToDisplay = filterRecipesTags(recipesToDisplay)
+        // filterListe(i)
         displayFilteredElements()
     })
 }
 
-for (let i = 0 ; i < deleteTags.length ; i++) {
-    deleteTags[i].addEventListener("click", function() {
-        console.log("croix")
-        recipesToDisplay = filterRecipesTags(orderedRecipes)
-        displayFilteredElements()
-    })
-}
+// for (let i = 0 ; i < deleteTags.length ; i++) {
+//     deleteTags[i].addEventListener("click", function() {
+//         recipesToDisplay = filterRecipesTags(orderedRecipes)
+//         displayFilteredElements()
+//     })
+// }
 
  
-
+// fonction de filtre pour la saisie dans l'input des boutons de filtre
 // rappel
 // createListOfCheckboxes (listeName, triFormNumber)
-// createCheckboxes(i, listeName, triFormNumber)
 
 for (let i = 0 ; i < inputButtons.length ; i++ ) {
     inputButtons[i].addEventListener("input", function(e) {
         e.preventDefault()
 
-        // oneButtonAtATime()
         listOfCheckboxes[i].innerHTML = ""
         filterListe(i)
 
+       
+
         if (inputButtons[i].value.length){
            
-
             // si le bouton de saisie est ouvert, on block la div of checkboxes
             if (inputButtons[i].classList.contains("boutonOuvert")) {
                 divOfCheckboxes[i].classList.add("block")
@@ -282,62 +304,51 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) {
 
         } else {
             createListOfCheckboxes (arrayOfFiltersToDisplay[i], i)
-          
             openChevron[i].classList.remove("rotate")
+        }
+// voir ou mettre cette fonction pour que ça marche correctement changer listofingappus remplacer par list d'elements triés
+        for (let j = 0 ; j < listOfIngAppUs.length ; j++) {
+            listOfIngAppUs[j].addEventListener("click", function() {
+                console.log(j)
+                filterListe(j)
+                console.log("click element")
+                recipesToDisplay = filterRecipesTags(recipesToDisplay)
+                displayFilteredElements()
+            })
         }
     })
 
 }
 
 function filterListe(i) {
+    
     let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
     createListOfCheckboxes (resultsArray, i)
+    
     if (resultsArray.length) {
+        messageListe[i].classList.remove("block")
+        console.log(resultsArray[0])
         createAndDeleteFilters()
     } else {
-        if (divOfCheckboxes[i].textContent == "") {
-        let messageListe = document.createElement("div")
-            messageListe.classList.add("messageListe")
-            messageListe.textContent = "Aucun resultat.."
-            divOfCheckboxes[i].appendChild(messageListe)   
-        }     
+        messageListe[i].classList.add("block")   
     }
-}
-
-
-
-for (let i = 0 ; i < inputButtons.length ; i++) {
-    inputButtons[i].addEventListener("input", function() {
-
-        if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length >= 3) {
-            divOfCheckboxes[i].classList.add("block")
-            divOfCheckboxes[i].classList.add("inputWidth")
-            inputButtons[i].classList.add("borderRadius")
-            openChevron[i].classList.add("rotate")
-  
-
-        } else if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length < 3) {
-            divOfCheckboxes[i].classList.remove("block")
-            divOfCheckboxes[i].classList.remove("inputWidth")
-            inputButtons[i].classList.remove("borderRadius")
-            openChevron[i].classList.remove("rotate")
-
-        }
-    })
+    
+    
 
 }
 
 
+// création du message "Aucun reusltat" integré dans les listes d'elements si celles ci sont vides
 
-function messageAucunResultat() {
-    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
-        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
-        if (divOfCheckboxes[i].textContent == "") {
-            let messageListe = document.createElement("div")
-            messageListe.classList.add("messageListe")
-            messageListe.textContent = "Aucun resultat.."
-            divOfCheckboxes[i].appendChild(messageListe)
-        }
-    }
+for (let i = 0 ; i < divOfCheckboxes.length ; i++ ) {
+    let messageListe = document.createElement("div")
+    messageListe.classList.add("messageListe")
+    messageListe.classList.add("none")
+
+    messageListe.textContent = "Aucun resultat.."
+    divOfCheckboxes[i].appendChild(messageListe)
 }
+
+let messageListe = document.querySelectorAll(".messageListe")
+
 

@@ -112,7 +112,6 @@ function createIngredientList(ingredients, ingredientsListe) {
 function ellipsis() {
     const recette = document.querySelectorAll(".recette")
 
-
     for (let i = 0 ; i < recette.length ; i++ ) {
         let textBase = recette[i].textContent
         recette[i].textContent = ""

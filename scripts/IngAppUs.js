@@ -79,14 +79,12 @@ const triForm = document.querySelectorAll(".tri")
 for (let i = 0 ; i < openButtons.length ; i++) {
     openButtons[i].addEventListener("click", function(e) {
         e.preventDefault()
-
-        if (inputButtons[i].classList.contains("boutonOuvert") ) {
-            // si le bouton est ouvert, on le ferme et on s'arrete là
+        // si chevron bouton ouvert, on le ferme et c'est tout
+        if (openChevron[i].classList.contains("rotate") ) {
             closeAllButtonsAndInputs() 
-            // modifyPlaceholder(i)  
             return
+       
         }
-        
         // autrement on ouvre le bouton selectionné et on ferme les autres
         openButton(i)
 
@@ -105,8 +103,11 @@ function closeAllButtonsAndInputs() {
                 inputButtons[i].classList.remove("inputWidth")
             }
             divOfCheckboxes[i].classList.remove("block")
+            divOfCheckboxes[i].classList.remove("inputWidth")
             openChevron[i].classList.remove("rotate")
             sectionBoutons.classList.remove("marginBottom")
+            inputButtons[i].classList.remove("borderRadius")
+
             modifyPlaceholder(i)
     }
 }
@@ -125,6 +126,30 @@ function openButton(i) {
     modifyPlaceholder(i)  
 
 }
+
+
+// specificicité de l'ouverture des listes à l'input avec bouton fermé
+for (let i = 0 ; i < inputButtons.length ; i++) {
+    inputButtons[i].addEventListener("input", function() {
+
+        if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length) {
+            divOfCheckboxes[i].classList.add("block")
+            divOfCheckboxes[i].classList.add("inputWidth")
+            inputButtons[i].classList.add("borderRadius")
+            openChevron[i].classList.add("rotate")
+
+
+        } else if (inputButtons[i].classList.contains("inputWidth") && !inputButtons[i].value.length) {
+            divOfCheckboxes[i].classList.remove("block")
+            divOfCheckboxes[i].classList.remove("inputWidth")
+            inputButtons[i].classList.remove("borderRadius")
+            openChevron[i].classList.remove("rotate")
+
+        }
+    })
+}
+
+
 
 
 // modification du bouton au click sur la zone de saisie
@@ -203,7 +228,7 @@ for (let i = 0 ; i < triForm.length ; i++) {
 
 
 // on limite le nombre d'elements à 30
-function createListOfCheckboxes (listeName, triFormNumber){
+function createListOfCheckboxes(listeName, triFormNumber){
         for (let i = 0 ; i < 30 && i < listeName.length ; i++) {
 
             createCheckboxes(i, listeName, triFormNumber)
@@ -258,8 +283,8 @@ function createAndDeleteFilters() {
 
     for (let i = 0 ; i < triElement.length ; i++) {
         triElement[i].addEventListener("click", function(e) {
-            e.preventDefault() // pour ne pas créer l'element en double
-            listOfIngAppUs = []
+            e.preventDefault() //important
+            // listOfIngAppUs = []
             deleteFiltre = createFiltre(i)  
             let selectedElement = triElement[i]
             triElement[i].classList.add("none")  
@@ -267,13 +292,14 @@ function createAndDeleteFilters() {
             // on recherche et supprime les element ici car c'est là qu'on les a créés            
             deleteFiltre.addEventListener("click", function(e) {
 
-                e.preventDefault()
+                removeItemOnce(listOfTags, e.target.parentElement)
+                removeItemOnce(deleteTags, e.target)
+
                 selectedElement.classList.add("block")
                 sectionFiltres.removeChild(e.target.parentElement)
 
-                removeItemOnce(listOfTags, e.target.parentElement)
-                removeItemOnce(deleteTags, deleteFiltre)
-
+                recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(orderedRecipes))
+                displayFilteredElements()
             })
         })
     }
@@ -319,10 +345,10 @@ let newFiltre = document.querySelectorAll(".newFiltre")
 
 
 function removeItemOnce(array, value) {
-    let index = array.indexOf(value);
+    let index = array.indexOf(value)
     if (index > -1) {
-      array.splice(index, 1);
+      array.splice(index, 1)
     }
-    return array;
+    return array
   }
 
