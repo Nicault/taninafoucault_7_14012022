@@ -11,16 +11,17 @@ const searchBar = document.querySelector("#searchBar")
 let arrayOfFilters = [listeIngredients, listeAppareils, listeUstensiles]
 
 
-// on tri tous les elements par ordre alphabatique maintenent 
+// on tri tous les elements par ordre alphabatique puis on les ajoute dans un nouveau tableau
+// qui regroupera les elements triés != des listes de bases qui ne sont pas triées 
 
-let orderedRecipes = []
+let orderedRecipes = [] //tableau de recettes ordonnées AZ
 for (let i = 0 ; i < recipes.length ; i++) {
     orderedRecipes.push(recipes[i])
 }
 orderedRecipes = orderRecipes(orderedRecipes)
 
 
-
+// fonction qui permet de dupliquer les listes
 function fillOrderedArrays(arrayToFill, model) {
     arrayToFill = []
     for (let i = 0 ; i < model.length ; i++) {
@@ -31,18 +32,18 @@ function fillOrderedArrays(arrayToFill, model) {
     return arrayToFill
 }
 
-let orderedIngredients = []
+let orderedIngredients = [] //tableau d'ingredients ordonnés AZ
 orderedIngredients = fillOrderedArrays(orderedIngredients, listeIngredients)
-let orderedAppareils = []
+let orderedAppareils = [] //tableau d'appareils ordonnés AZ
 orderedAppareils = fillOrderedArrays(orderedAppareils, listeAppareils)
-let orderedUstensiles = []
+let orderedUstensiles = [] //tableau d'ustensiles ordonnés AZ
 orderedUstensiles = fillOrderedArrays(orderedUstensiles, listeUstensiles)
 
-let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles]
+let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstensiles] // tableau regroupant les listes ordonées afin d'y acceder via une boucle
 
 
 
-
+// fonctions qui permettent de trier les listes qui ont été dupliquées
 function orderRecipes(data) {
     let orderedData = data.sort((a,b) => {
         if (pureString(a.name) < pureString(b.name)) {
@@ -76,131 +77,35 @@ function order(data) {
 
 
 // on crée les variables de tableaux triés
+// "element"ToDisplay sera amené à evoluer, on supprimera des elements au fur et à mesure des filtres
+// tandis que ordered"Element" sera toujours le même
 let recipesToDisplay = orderedRecipes
 
-let ingredientsToDisplay = listeIngredients
-let applianceToDisplay = listeAppareils
-let ustensilesToDisplay = listeUstensiles
+let ingredientsToDisplay = orderedIngredients
+let applianceToDisplay = orderedAppareils
+let ustensilesToDisplay = orderedUstensiles
 
 let arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
 
 
 
 
-
-
-// affiche tous les elements
-
-function displayAllElements() {
-     // on efface tout
-     recipesSection.innerHTML = ""
-     for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
-         listOfCheckboxes[i].innerHTML = ""
-     }    
-
-    //  on affiche tout
-    displayData(recipes)
-    for (let i = 0 ; i < arrayOfFilters.length ; i++) {
-        createListOfCheckboxes(arrayOfFilters[i], i)
-    }
-    createAndDeleteFilters()
-}
-
-
-
-// affiche les elements apres les avoir filtré
-
-function displayFilteredElements() {
-    // on efface tout
-    recipesSection.innerHTML = ""
-    for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
-        listOfCheckboxes[i].innerHTML = ""
-    }   
-
-    
-   
-    // on filtre les tableaux de tags par rapport aux recettes affichées
-    applianceToDisplay = filterAppliances(recipesToDisplay)
-    ingredientsToDisplay = filterIngredients(recipesToDisplay)
-    ustensilesToDisplay = filterUstensils(recipesToDisplay)
-
-
-    // on les met à jour
-    arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
-
-    // on les affiche
-    if (recipesToDisplay.length > 0) {
-        displayData(recipesToDisplay)
-    } else {
-        let message = document.createElement("div")
-        message.classList.add("message")
-        message.textContent = "Aucune recette ne correspond à votre recherche... Vous pouvez chercher 'tarte aux pommes', 'poisson', etc."
-        recipesSection.appendChild(message)
-    }
-
-
-    for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) {
-        if (arrayOfFiltersToDisplay[i].length > 0) {
-            createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
-            messageListe[i].classList.remove("block")
-            
-        } else {
-            messageListe[i].classList.add("block")
-        }
-    }
-
-    createAndDeleteFilters()
-
-
-    for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
-        listOfIngAppUs[i].addEventListener("click", function() {
-            console.log("click element")
-            filterListe(i)
-            recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(recipesToDisplay))
-            displayFilteredElements()
-        })
-    }
-} 
-
-
-// filtre les recettes 
-function filterRecipesSearchBar(currentOrderedRecipes) {
-    let resultsArray = currentOrderedRecipes
-  
-    // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
-     resultsArray = resultsArray.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
-                                                   pureString(element.description).includes(pureString(searchBar.value)) || 
-                                                   element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
-
-    return resultsArray   
-}
-    // via les tags (en fonction de la catégorie des tags, si une recette correspond, on garde)
-  
-function filterRecipesTags(currentOrderedRecipes) {
-    let resultsArray = currentOrderedRecipes
-
-    for (let i = 0 ; i < listOfTags.length ; i++) {
-        if (listOfTags[i].classList.contains("blue")) {
-            resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(listOfTags[i].textContent))))
-        } else if (listOfTags[i].classList.contains("green")) {
-            resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(listOfTags[i].textContent)))
-        } else if (listOfTags[i].classList.contains("red")){
-            resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
-        }
-
-    } 
-
-    return resultsArray   
-}
-
-
 // filtre les filtres proposés par rapport aux recettes deja affichées
+// ici on filtre les liste d'ingredients, appareils et ustensiles par rapport aux recette qui on été diplayed
+// on filtrera les tableaux apliance, ingredients et ustensiles To Display pour qu'ils n'affichent
+// que les elements présents dans recipesToDisplay (la liste mise en parametre)
+
+// on base le filtre sur ordered"Element" pour que le filtre soit effectif à l'ajout d'un nouveau filtre mais aussi à la suppression
+// voir si on peut modifer ça (pas sur qu'on utlise cette fonction dans l'autre sens donc peut etre
+// remplacer orderedMachin par resultsMachin)
+
 
 function filterIngredients(recipesToDisplay) {
-    let resultsIngredient = orderedIngredients.filter(ingredient => recipesToDisplay.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient)  == pureString(ingredient))))
+    let resultsIngredient = orderedIngredients.filter(ingredient => recipesToDisplay.some(recipe => recipe.ingredients.some(element => pureString(element.ingredient) == pureString(ingredient))))
 
     for (let i = 0 ; i < listOfTags.length ; i++) {
-        removeItemOnce(resultsIngredient, listOfTags[i].textContent)        
+        removeItemOnce(resultsIngredient, listOfTags[i].textContent)
+        // ici on supprime l'element sur lequel on a cliqué de la liste, pour ne pas faire de doublon avec le tag crée
     }
 
     return resultsIngredient
@@ -226,129 +131,220 @@ function filterUstensils(recipesToDisplay) {
     return resultsUstensils
 }
 
+// filtre les recettes via searchbar
 
+function filterRecipesSearchBar(currentOrderedRecipes) {
+    let resultsArray = currentOrderedRecipes
+  
+    // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
+     resultsArray = resultsArray.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
+                                                   pureString(element.description).includes(pureString(searchBar.value)) || 
+                                                   element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
 
-
-
-
-
-
-
-
-
-
-//  filtre de la barre de recherche principale : à l'input on affiche unqiquement les recettes contenant le terme saisi
-//  puis, en fonction des recettes affichées on filtre les filtres à afficher (on supprime les filtres absents des recettes déjà affichées)
-
-searchBar.addEventListener("input", function() {
-    if (searchBar.value.length > 2 ) {
-        if (listOfTags.length == 0) { 
-         // on filtre les recettes à afficher par rapport aux données de recherche
-        recipesToDisplay = filterRecipesSearchBar(orderedRecipes)
-        displayFilteredElements()  
-        } else if (listOfTags.length > 0){
-        // on tri via la searchbar ce qui a deja ete trié via les tags
-        recipesToDisplay = filterRecipesSearchBar(filterRecipesTags(recipesToDisplay))
-        displayFilteredElements()
-        }    
-    } else {
-        if (listOfTags.length > 0){
-            recipesToDisplay = filterRecipesSearchBar(filterRecipesTags(recipesToDisplay))
-            displayFilteredElements()
-        } else {
-            displayAllElements()
-        }
-    }
-})
-
-
-
-
-// ajout d'un event listener sur le declenchement de la création d'un filtre tag
-
-for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
-    listOfIngAppUs[i].addEventListener("click", function() {
-        recipesToDisplay = filterRecipesTags(recipesToDisplay)
-        // filterListe(i)
-        displayFilteredElements()
-    })
+    return resultsArray   
 }
 
-// for (let i = 0 ; i < deleteTags.length ; i++) {
-//     deleteTags[i].addEventListener("click", function() {
-//         recipesToDisplay = filterRecipesTags(orderedRecipes)
+// filtre les recettes via les tags (en fonction de la catégorie des tags, si une recette correspond, on garde)
+  
+function filterRecipesTags(currentOrderedRecipes) {
+    let resultsArray = currentOrderedRecipes
+
+    for (let i = 0 ; i < listOfTags.length ; i++) {
+        if (listOfTags[i].classList.contains("blue")) {
+            resultsArray = resultsArray.filter(element => element.ingredients.some(el => pureString(el.ingredient).includes(pureString(listOfTags[i].textContent))))
+        } else if (listOfTags[i].classList.contains("green")) {
+            resultsArray = resultsArray.filter(element => pureString(element.appliance).includes(pureString(listOfTags[i].textContent)))
+        } else if (listOfTags[i].classList.contains("red")){
+            resultsArray = resultsArray.filter(element => element.ustensils.some(ele => pureString(ele).includes(pureString(listOfTags[i].textContent))))
+        }
+
+    } 
+
+    return resultsArray   
+}
+
+
+
+// for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) { // si il y a des element dans les differents tableaux d'ing app ou us, on les affiche et on masque le message d'erreur
+//     if (arrayOfFiltersToDisplay[i].length > 0) {
+//         createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+//         messageListe[i].classList.remove("block")
+        
+//     } else { // si non on affiche le message d'erreur
+//         messageListe[i].classList.add("block")
+//     }
+// }
+
+
+// fonction qui permet d'afficher tous les elements (aucun filtre)
+
+function displayAllElements() {
+    // on efface tout 
+    recipesSection.innerHTML = "" //la section recettes
+    for (let i = 0 ; i < listOfCheckboxes.length ; i++) { // et les tableaux de filtres
+        listOfCheckboxes[i].innerHTML = ""
+    }    
+    listOfIngAppUs = [] //et on réinitialise la liste des filtres qu'on vient d'effacer car on la rerempli à chaque fois
+
+   //  on affiche tout
+   displayData(recipes) //on display les données initiales des recettes
+   for (let i = 0 ; i < arrayOfFilters.length ; i++) { // et des filtres
+       createListOfCheckboxes(arrayOfFilters[i], i) // on crée les listes on rempli listOfIngAppUs
+   }
+   createAndDeleteFilters() // on active la création des tags sur les nouvelles listes
+}
+
+
+
+// affiche les elements apres les avoir filtré
+
+function displayFilteredElements() {
+   // on efface tout
+   recipesSection.innerHTML = ""
+   for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
+       listOfCheckboxes[i].innerHTML = ""
+   } 
+   listOfIngAppUs = [] // important
+  
+   // on filtre les tableaux de tags par rapport à recipesToDisplay : on ne garde que les ingredients, appareils et ustensiles présents dans la liste
+   applianceToDisplay = filterAppliances(recipesToDisplay)
+   ingredientsToDisplay = filterIngredients(recipesToDisplay)
+   ustensilesToDisplay = filterUstensils(recipesToDisplay)
+
+   // on met à jour le tableau avec les nouvelles listes
+   arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
+   
+   
+
+   // on affiche les recettes
+   if (recipesToDisplay.length > 0) { // si il y a des element dans le tableau recipesToDisplay, on les affiche
+       displayData(recipesToDisplay)
+   } else { //si non on affiche le message d'erreur
+       let message = document.createElement("div")
+       message.classList.add("message")
+       message.textContent = "Aucune recette ne correspond à votre recherche... Vous pouvez chercher 'tarte aux pommes', 'poisson', etc."
+       recipesSection.appendChild(message)
+   }
+
+   // on créé les listes de filtres
+   for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) { // si il y a des element dans les differents tableaux d'ing app ou us, on les affiche et on masque le message d'erreur
+       if (arrayOfFiltersToDisplay[i].length > 0) {
+           createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+           messageListe[i].classList.remove("block")
+           
+       } else { // si non on affiche le message d'erreur
+           messageListe[i].classList.add("block")
+       }
+   }
+
+   createAndDeleteFilters() // on active la création des tags sur les nouvelles listes
+   displayOnClick() // et on reactive la fonction qui affiche a click car les elemnts ont été supprimés et recréés
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// premier declenchement de tri : à l'input dans la search bar
+function displayOnSearchbar() {
+    searchBar.addEventListener("input", function(e) { // à l'input
+        e.preventDefault()
+        if (listOfTags.length > 0){ // si il y a des tags, on tri les recettes par rapport aux tags
+            recipesToDisplay = filterRecipesTags(orderedRecipes)
+            if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on retri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
+                recipesToDisplay = filterRecipesSearchBar(recipesToDisplay)
+                displayFilteredElements()
+            } else { // si non on affiche directement les recette triés par rapport au tags
+                displayFilteredElements()
+            }
+        } else if (listOfTags.length == 0) { // si pas de tags
+            if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on tri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
+                recipesToDisplay = filterRecipesSearchBar(orderedRecipes)
+                displayFilteredElements()
+            } else { // si non on affiche tout
+                displayAllElements()
+            }
+        }
+
+    })
+    
+}
+
+displayOnSearchbar()
+
+
+
+
+
+// deuxieme declenchement de tri : à la création d'un filtre (quand on clique sur un element de la liste)
+// pas besoin ici de retrancher avec le tri de la barre de recherche car il y a deja eu un premier tri
+// les elements qui sont affichés sont uniquement ceux qui correspondent aux recettes affichées
+function displayOnClick() {
+    for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
+        listOfIngAppUs[i].addEventListener("click", function(e) {
+            e.preventDefault()
+            recipesToDisplay = filterRecipesTags(recipesToDisplay)
+            displayFilteredElements()
+        })
+    }
+
+}
+// for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
+//     listOfIngAppUs[i].addEventListener("click", function() {
+//         recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(recipesToDisplay))
 //         displayFilteredElements()
 //     })
 // }
+displayOnClick()
 
- 
-// fonction de filtre pour la saisie dans l'input des boutons de filtre
-// rappel
-// createListOfCheckboxes (listeName, triFormNumber)
 
-for (let i = 0 ; i < inputButtons.length ; i++ ) {
-    inputButtons[i].addEventListener("input", function(e) {
-        e.preventDefault()
 
-        listOfCheckboxes[i].innerHTML = ""
-        filterListe(i)
 
-       
 
-        if (inputButtons[i].value.length){
-           
-            // si le bouton de saisie est ouvert, on block la div of checkboxes
-            if (inputButtons[i].classList.contains("boutonOuvert")) {
-                divOfCheckboxes[i].classList.add("block")
+
+// troisiement declenchement de tri : à la saisie dans l'input des boutons de filtre
+// ATTENTION  ce filtre est differents des autres car il ne filtre PAS les recettes mais uniquement les liste d'ing app us
+
+function displayInput() {
+    for (let i = 0 ; i < inputButtons.length ; i++ ) { // à la saisie dans un des input button
+        inputButtons[i].addEventListener("input", function(e) {
+            e.preventDefault()
+            listOfCheckboxes[i].innerHTML = ""
+            // listOfIngAppUs = [] ça ne marche pas car si on efface tout ca ne recréera que les elemenet du tableau actif
+
+            let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+
+            for (let j = 0 ; j < resultsArray.length ; j++) { // supprime de list of ing app us les element qu'on vient de créer
+                listOfIngAppUs.pop()
             }
+            createListOfCheckboxes (resultsArray, i) //probleme ici car on duplique les element et les rajoute dans le tableau ing app us // reglé : on pop avant 
+            createAndDeleteFilters()   
 
-        } else {
-            createListOfCheckboxes (arrayOfFiltersToDisplay[i], i)
-            openChevron[i].classList.remove("rotate")
-        }
-// voir ou mettre cette fonction pour que ça marche correctement changer listofingappus remplacer par list d'elements triés
-        for (let j = 0 ; j < listOfIngAppUs.length ; j++) {
-            listOfIngAppUs[j].addEventListener("click", function() {
-                console.log(j)
-                filterListe(j)
-                console.log("click element")
-                recipesToDisplay = filterRecipesTags(recipesToDisplay)
-                displayFilteredElements()
-            })
-        }
-    })
+            if (resultsArray.length) {            
+                messageListe[i].classList.remove("block")
+            } else {
+                messageListe[i].classList.add("block")   
+            }
+            displayOnClick()
+        })
 
-}
-
-function filterListe(i) {
-    
-    let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
-    createListOfCheckboxes (resultsArray, i)
-    
-    if (resultsArray.length) {
-        messageListe[i].classList.remove("block")
-        console.log(resultsArray[0])
-        createAndDeleteFilters()
-    } else {
-        messageListe[i].classList.add("block")   
     }
-    
-    
-
 }
 
+displayInput()
 
-// création du message "Aucun reusltat" integré dans les listes d'elements si celles ci sont vides
 
-for (let i = 0 ; i < divOfCheckboxes.length ; i++ ) {
-    let messageListe = document.createElement("div")
-    messageListe.classList.add("messageListe")
-    messageListe.classList.add("none")
 
-    messageListe.textContent = "Aucun resultat.."
-    divOfCheckboxes[i].appendChild(messageListe)
-}
 
-let messageListe = document.querySelectorAll(".messageListe")
+
 
 

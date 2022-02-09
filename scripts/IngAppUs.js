@@ -229,11 +229,16 @@ for (let i = 0 ; i < triForm.length ; i++) {
 
 // on limite le nombre d'elements à 30
 function createListOfCheckboxes(listeName, triFormNumber){
+    if (!divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si grand format, on affiche mar 30element
         for (let i = 0 ; i < 30 && i < listeName.length ; i++) {
-
             createCheckboxes(i, listeName, triFormNumber)
-
         } 
+    } else {
+        for (let i = 0 ; i < 10 && i < listeName.length ; i++) {//si petit format on affiche max 10elements
+            createCheckboxes(i, listeName, triFormNumber)
+        } 
+    }
+        
 }
 
 let listOfIngAppUs = []
@@ -351,4 +356,18 @@ function removeItemOnce(array, value) {
     }
     return array
   }
+
+// création du message "Aucun reusltat" integré dans les listes d'elements si celles ci sont vides
+
+for (let i = 0 ; i < divOfCheckboxes.length ; i++ ) {
+    let messageListe = document.createElement("div")
+    messageListe.classList.add("messageListe")
+    messageListe.classList.add("none")
+
+    messageListe.textContent = "Aucun resultat.."
+    divOfCheckboxes[i].appendChild(messageListe)
+}
+
+let messageListe = document.querySelectorAll(".messageListe")
+
 
