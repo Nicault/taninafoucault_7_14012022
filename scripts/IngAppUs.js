@@ -117,17 +117,6 @@ function openInput(i) {
     inputButtons[i].classList.add("inputWidth")
 }
 
-function openButton(i) {
-    closeAllButtonsAndInputs()
-    divOfCheckboxes[i].classList.add("block")
-    inputButtons[i].classList.add("boutonOuvert")
-    openChevron[i].classList.add("rotate")
-    sectionBoutons.classList.add("marginBottom")
-    modifyPlaceholder(i)  
-
-}
-
-
 // specificicité de l'ouverture des listes à l'input avec bouton fermé
 for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("input", function() {
@@ -150,6 +139,19 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
 }
 
 
+function openButton(i) {
+    closeAllButtonsAndInputs()
+    divOfCheckboxes[i].classList.add("block")
+    inputButtons[i].classList.add("boutonOuvert")
+    openChevron[i].classList.add("rotate")
+    sectionBoutons.classList.add("marginBottom")
+    modifyPlaceholder(i)  
+}
+
+
+
+
+
 
 
 // modification du bouton au click sur la zone de saisie
@@ -157,6 +159,11 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
 
 for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("click", function() {
+        if (inputButtons[i].classList.contains("boutonOuvert")) {
+            return
+        }
+        closeAllButtonsAndInputs()
+
         for (let i = 0 ; i < inputButtons.length ; i++) {
             if (inputButtons[i].classList.contains("inputWidth")) {
                 // si une zone de texte est selectionnée, on la deselctionne
@@ -202,11 +209,9 @@ function modifyPlaceholder(i) {
 
 
 
-
-
-let newLiElement = []
-let newLabel = []
-let newInput = []
+// let newLiElements = []
+// let newLabels = []
+// let newInputs = []
 let listOfCheckboxes = []
 let divOfCheckboxes = []
 
@@ -229,7 +234,7 @@ for (let i = 0 ; i < triForm.length ; i++) {
 
 // on limite le nombre d'elements à 30
 function createListOfCheckboxes(listeName, triFormNumber){
-    if (!divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si grand format, on affiche mar 30element
+    if (!divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si grand format, on affiche max 30element
         for (let i = 0 ; i < 30 && i < listeName.length ; i++) {
             createCheckboxes(i, listeName, triFormNumber)
         } 
@@ -240,22 +245,32 @@ function createListOfCheckboxes(listeName, triFormNumber){
     }
         
 }
+let clickableIng = []
+let clickableApp = []
+let clickableUs = []
 
-let listOfIngAppUs = []
+let listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
 // créé les checkboxes et les append aux elements de liste
 function createCheckboxes(i, listeName, triFormNumber) {
-    newLiElement[i] = document.createElement("li")
-    newLabel[i] = document.createElement("label")
-    newInput[i] = document.createElement("input")
-    newInput[i].classList.add("checkbox")
-    newInput[i].setAttribute("type", "checkbox")
-    newLabel[i].textContent = listeName[i]
-    newLiElement[i].appendChild(newLabel[i])
-    newLabel[i].appendChild(newInput[i])
+    let newLiElement = document.createElement("li")
+    let newLabel = document.createElement("label")
+    let newInput = document.createElement("input")
+    newInput.classList.add("checkbox")
+    newInput.setAttribute("type", "checkbox")
+    newLabel.textContent = listeName[i]
+    newLiElement.appendChild(newLabel)
+    newLabel.appendChild(newInput)
 
-
-    listOfCheckboxes[triFormNumber].appendChild(newLiElement[i]) 
-    listOfIngAppUs.push(newLiElement[i])
+    listOfCheckboxes[triFormNumber].appendChild(newLiElement) 
+    // listOfIngAppUs.push(newLiElement[i])
+    if (newLiElement.parentElement.parentElement.parentElement.classList.contains("blue")) {
+        clickableIng.push(newLiElement)
+    } else if (newLiElement.parentElement.parentElement.parentElement.classList.contains("green")) {
+        clickableApp.push(newLiElement)
+    } else {
+        clickableUs.push(newLiElement)
+    }
+    listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
 }
 
 
@@ -281,49 +296,72 @@ sectionRecherche.insertBefore(sectionFiltres, sectionBoutons)
 
 let listOfTags = []
 let deleteTags = []
+let triIng = []
+let triApp= []
+let triUs = []
+let triElement = [triIng, triApp, triUs]
 
-function createAndDeleteFilters() {
+
+function createAndDeleteFilters(first, last) {
     
-    triElement = document.querySelectorAll(".listOfCheckboxes li")
+    // triElement = []
+    // console.log(triElement)
+    triElement[0] = document.querySelectorAll(".blue .listOfCheckboxes li")
+    triElement[1] = document.querySelectorAll(".green .listOfCheckboxes li")
+    triElement[2] = document.querySelectorAll(".red .listOfCheckboxes li")
 
-    for (let i = 0 ; i < triElement.length ; i++) {
-        triElement[i].addEventListener("click", function(e) {
-            e.preventDefault() //important
-            // listOfIngAppUs = []
-            deleteFiltre = createFiltre(i)  
-            let selectedElement = triElement[i]
-            triElement[i].classList.add("none")  
-    
-            // on recherche et supprime les element ici car c'est là qu'on les a créés            
-            deleteFiltre.addEventListener("click", function(e) {
+    // console.log(triElement[0])
 
-                removeItemOnce(listOfTags, e.target.parentElement)
-                removeItemOnce(deleteTags, e.target)
 
-                selectedElement.classList.add("block")
-                sectionFiltres.removeChild(e.target.parentElement)
 
-                recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(orderedRecipes))
-                displayFilteredElements()
+    for (let i = first ; i < last ; i++) {
+        // console.log(triElement[i].length)
+
+        for (let j = 0 ; j < triElement[i].length ; j++) {
+            // console.log(triElement[i][j])
+
+            triElement[i][j].addEventListener("click", function(e) {
+
+                e.preventDefault() //important
+                // e.stopPropagation()
+                // listOfIngAppUs = []
+                deleteFiltre = createFiltre(i, j)  
+                let selectedElement = triElement[i][j]
+                triElement[i][j].classList.add("none")
+        
+                // on recherche et supprime les element ici car c'est là qu'on les a créés            
+                deleteFiltre.addEventListener("click", function(e) {
+
+                    removeItemOnce(listOfTags, e.target.parentElement)
+                    removeItemOnce(deleteTags, e.target)
+
+                    selectedElement.classList.add("block")
+                    sectionFiltres.removeChild(e.target.parentElement)
+
+                    recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(orderedRecipes))
+                    displayFilteredElements()
+                })
             })
-        })
+        }
+        
+        
     }
 }
 
-createAndDeleteFilters()
+createAndDeleteFilters(0, triElement.length)
 
 // crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça si possible!
-function createFiltre(i) {
+function createFiltre(i, j) {
 
     newFiltre = document.createElement("div")
     newFiltre.classList.add("newFiltre")
-    newFiltre.textContent = triElement[i].textContent
+    newFiltre.textContent = triElement[i][j].textContent
     deleteFiltre = document.createElement("i")
 
-    if (triElement[i].parentElement.parentElement.parentElement.classList.contains("red")) {
+    if (triElement[i][j].parentElement.parentElement.parentElement.classList.contains("red")) {
         newFiltre.classList.add("red")
     
-    } else if (triElement[i].parentElement.parentElement.parentElement.classList.contains("blue")) {
+    } else if (triElement[i][j].parentElement.parentElement.parentElement.classList.contains("blue")) {
         newFiltre.classList.add("blue")
 
     } else {
@@ -346,7 +384,6 @@ function createFiltre(i) {
 
 
 
-let newFiltre = document.querySelectorAll(".newFiltre")
 
 
 function removeItemOnce(array, value) {

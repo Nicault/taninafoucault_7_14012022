@@ -184,14 +184,19 @@ function displayAllElements() {
     for (let i = 0 ; i < listOfCheckboxes.length ; i++) { // et les tableaux de filtres
         listOfCheckboxes[i].innerHTML = ""
     }    
-    listOfIngAppUs = [] //et on réinitialise la liste des filtres qu'on vient d'effacer car on la rerempli à chaque fois
+    // listOfIngAppUs = [] //et on réinitialise la liste des filtres qu'on vient d'effacer car on la rerempli à chaque fois
+    clickableIng = []
+    clickableApp = []
+    clickableUs = []
 
+    listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
    //  on affiche tout
    displayData(recipes) //on display les données initiales des recettes
    for (let i = 0 ; i < arrayOfFilters.length ; i++) { // et des filtres
        createListOfCheckboxes(arrayOfFilters[i], i) // on crée les listes on rempli listOfIngAppUs
    }
-   createAndDeleteFilters() // on active la création des tags sur les nouvelles listes
+   createAndDeleteFilters(0, triElement.length)
+ // on active la création des tags sur les nouvelles listes
 }
 
 
@@ -204,7 +209,13 @@ function displayFilteredElements() {
    for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
        listOfCheckboxes[i].innerHTML = ""
    } 
-   listOfIngAppUs = [] // important
+//    listOfIngAppUs = [] // important
+
+    clickableIng = []
+    clickableApp = []
+    clickableUs = []
+
+    listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
   
    // on filtre les tableaux de tags par rapport à recipesToDisplay : on ne garde que les ingredients, appareils et ustensiles présents dans la liste
    applianceToDisplay = filterAppliances(recipesToDisplay)
@@ -237,7 +248,8 @@ function displayFilteredElements() {
        }
    }
 
-   createAndDeleteFilters() // on active la création des tags sur les nouvelles listes
+   createAndDeleteFilters(0, triElement.length)
+ // on active la création des tags sur les nouvelles listes
    displayOnClick() // et on reactive la fonction qui affiche a click car les elemnts ont été supprimés et recréés
 } 
 
@@ -290,24 +302,24 @@ displayOnSearchbar()
 // les elements qui sont affichés sont uniquement ceux qui correspondent aux recettes affichées
 function displayOnClick() {
     for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
-        listOfIngAppUs[i].addEventListener("click", function(e) {
-            e.preventDefault()
-            recipesToDisplay = filterRecipesTags(recipesToDisplay)
-            displayFilteredElements()
+        listOfIngAppUs[i].forEach(element => {
+            element.addEventListener("click", function(e) {
+                addEventToTag(e)
+            })
         })
     }
 
 }
-// for (let i = 0 ; i < listOfIngAppUs.length ; i++) {
-//     listOfIngAppUs[i].addEventListener("click", function() {
-//         recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(recipesToDisplay))
-//         displayFilteredElements()
-//     })
-// }
+
 displayOnClick()
 
 
+function addEventToTag(e) {
+    e.preventDefault()
+    recipesToDisplay = filterRecipesTags(recipesToDisplay)
+    displayFilteredElements()
 
+}
 
 
 
@@ -320,21 +332,37 @@ function displayInput() {
             e.preventDefault()
             listOfCheckboxes[i].innerHTML = ""
             // listOfIngAppUs = [] ça ne marche pas car si on efface tout ca ne recréera que les elemenet du tableau actif
-
-            let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
-
-            for (let j = 0 ; j < resultsArray.length ; j++) { // supprime de list of ing app us les element qu'on vient de créer
-                listOfIngAppUs.pop()
+            if (inputButtons[i].parentElement.classList.contains("blue")) {
+                clickableIng = []
+            } else if (inputButtons[i].parentElement.classList.contains("green")) {
+                clickableApp = []
+            } else {
+                clickableUs = []
             }
-            createListOfCheckboxes (resultsArray, i) //probleme ici car on duplique les element et les rajoute dans le tableau ing app us // reglé : on pop avant 
-            createAndDeleteFilters()   
-
-            if (resultsArray.length) {            
+            // console.log(listOfIngAppUs)
+            listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
+            // console.log(listOfIngAppUs)
+            
+            let resultsArray = arrayOfFiltersToDisplay[i].filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+            // console.log(resultsArray)
+            
+            if (resultsArray.length) { 
+                createListOfCheckboxes(resultsArray, i)
+                createAndDeleteFilters(i, i+1) 
+                                  
                 messageListe[i].classList.remove("block")
+                
             } else {
                 messageListe[i].classList.add("block")   
             }
+            // console.log(listOfIngAppUs[i])
+                // listOfIngAppUs[i].forEach(element => {
+                //     element.removeEventListener("click", addEventToTag)
+                // })
+            
+
             displayOnClick()
+            displayOnSearchbar()
         })
 
     }
