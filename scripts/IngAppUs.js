@@ -1,34 +1,15 @@
-// ellipsis à la dernière ponctuation
-
-const recette = document.querySelectorAll(".recette")
 
 
-for (let i = 0 ; i < recette.length ; i++ ) {
-    let textBase = recette[i].textContent
-    recette[i].textContent = ""
-    textCutted = textBase.split("", 210)
-    if (textCutted.length < 210) {
-        recette[i].textContent = textCutted.join('')
-    }
-    else {
-        let lastComma = textCutted.lastIndexOf(",")
-        let lastPoint = textCutted.lastIndexOf(".")
-        
-        if (lastComma < lastPoint) {
-            let newText = textCutted.slice(0, lastPoint +1)
-            recette[i].textContent = newText.join('') + " ..."
-        } else {
-            let newText = textCutted.slice(0, lastComma +1)
-            recette[i].textContent = newText.join('') + " ..."
 
-        }
-    }
+// fonction pour enlever les accents, et carateres speciaux de la saisie et de la recherche
+function pureString(string) {
+    return string.toLowerCase().normalize('NFD').replace(new RegExp("[^(a-zA-Z)]", "g"), '')
 }
-
 
 
 //  créer et remplir les tableaux d'ingredients, appareil et ustensiles
 
+// ici on aurait pu utiliser new Set()
 
 let listeIngredients = [] 
 let listeAppareils = []
@@ -64,26 +45,27 @@ for (let recipe of recipes) {
 
 }
 
-
+// function fillList remplie les listes avec les données de data
+// une seule occurence !
 function fillList(listName, elementToAdd, newElement) {
 
     for (let i = 0 ; i < listName.length ; i++) {
-        if (newElement.toLowerCase() == listName[i].toLowerCase()) {
+        if (pureString(newElement) == pureString(listName[i])) {
             elementToAdd = false
             break
         }
     }
 
     if (elementToAdd) {
-        newElement = newElement.charAt(0).toUpperCase() + newElement.slice(1)
         listName.push(newElement)
     }
 }
 
 
+
+
+
 // ouverture des menus bouttons (un seul à la fois) au click sur le chevron
-
-
 
 const sectionBoutons = document.querySelector(".sectionBoutons")
 
@@ -93,63 +75,114 @@ const inputButtons = document.querySelectorAll(".element")
 const triForm = document.querySelectorAll(".tri")
 
 
-
 for (let i = 0 ; i < openButtons.length ; i++) {
     openButtons[i].addEventListener("click", function(e) {
         e.preventDefault()
-
-        if (openChevron[i].classList.contains("rotate")) {
-            // si le bouton est ouvert, on le ferme et on s'arrete là
-            changeButtonStatut(i)  
+        // si chevron bouton ouvert, on le ferme et c'est tout
+        if (openChevron[i].classList.contains("rotate") ) {
+            closeAllButtonsAndInputs() 
             return
+       
         }
+        // autrement on ouvre le bouton selectionné et on ferme les autres
+        openButton(i)
 
-        for (let i = 0 ; i < inputButtons.length ; i++) {
-            if (openChevron[i].classList.contains("rotate")){
-                // si un autre bouton est ouvert, on le ferme
-                changeButtonStatut(i)  
-            } 
-        }
-        changeButtonStatut(i) 
-        // on ouvre le bouton 
     })
 }
 
-function changeButtonStatut(i) {
-    for (let i = 0 ; i < inputButtons.length ; i++) {
-        if (inputButtons[i].classList.contains("inputWidth")) {
-            // si une zone de texte est selectionnée, on la deselectionne
-            inputButtons[i].classList.toggle("inputWidth")
-        }
-    }
-   
 
-    divOfCheckboxes[i].classList.toggle("block")
-    inputButtons[i].classList.toggle("boutonOuvert")
-    openChevron[i].classList.toggle("rotate")
-    sectionBoutons.classList.toggle("marginBottom")
-    // inputButtons[i].classList.toggle("inputWidth")
+function closeAllButtonsAndInputs() {
+     for (let i = 0 ; i < inputButtons.length ; i++) {
+            if (inputButtons[i].classList.contains("boutonOuvert")){
+                // si un autre bouton est ouvert, on le ferme
+                inputButtons[i].classList.remove("boutonOuvert")
+              
+            } else if (inputButtons[i].classList.contains("inputWidth")) {
+                // si une zone de texte est selectionnée, on la deselectionne
+                inputButtons[i].classList.remove("inputWidth")
+            }
+            divOfCheckboxes[i].classList.remove("block")
+            divOfCheckboxes[i].classList.remove("inputWidth")
+            openChevron[i].classList.remove("rotate")
+            sectionBoutons.classList.remove("marginBottom")
+            inputButtons[i].classList.remove("borderRadius")
+
+            modifyPlaceholder(i)
+    }
+}
+
+function openInput(i) {
+    closeAllButtonsAndInputs()
+    inputButtons[i].classList.add("inputWidth")
+    
+}
+
+// specificicité de l'ouverture des listes à l'input avec bouton fermé
+for (let i = 0 ; i < inputButtons.length ; i++) {
+    inputButtons[i].addEventListener("input", function() {
+
+        if (inputButtons[i].classList.contains("inputWidth") && inputButtons[i].value.length) {
+            divOfCheckboxes[i].classList.add("block")
+            divOfCheckboxes[i].classList.add("inputWidth")
+            inputButtons[i].classList.add("borderRadius")
+            openChevron[i].classList.add("rotate")
+
+
+        } else if (inputButtons[i].classList.contains("inputWidth") && !inputButtons[i].value.length) {
+            divOfCheckboxes[i].classList.remove("block")
+            divOfCheckboxes[i].classList.remove("inputWidth")
+            inputButtons[i].classList.remove("borderRadius")
+            openChevron[i].classList.remove("rotate")
+
+        }
+    })
+}
+
+
+function openButton(i) {
+    closeAllButtonsAndInputs()
+    divOfCheckboxes[i].classList.add("block")
+    inputButtons[i].classList.add("boutonOuvert")
+    openChevron[i].classList.add("rotate")
+    sectionBoutons.classList.add("marginBottom")
     modifyPlaceholder(i)  
 }
+
+
+
+
+
+
 
 // modification du bouton au click sur la zone de saisie
 // ATTENTION VOIR POUR RAJOUTER DES BACKGROUND POUR UN CLICK EXTERIEUR
 
-
 for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("click", function() {
+        if (inputButtons[i].classList.contains("boutonOuvert") ||
+            inputButtons[i].classList.contains("inputWidth")) {
+            return
+        }
+
+        closeAllButtonsAndInputs()
+
         for (let i = 0 ; i < inputButtons.length ; i++) {
             if (inputButtons[i].classList.contains("inputWidth")) {
                 // si une zone de texte est selectionnée, on la deselctionne
-                inputButtons[i].classList.toggle("inputWidth")
+                inputButtons[i].classList.remove("inputWidth")
             }
+            // si un bouton est ouvert, on le ferme
+            // if (inputButtons[i].classList.contains("boutonOuvert")){
+            //     changeButtonStatut(i)
+
+            // }
         }
-    if ( inputButtons[i].classList.contains("boutonOuvert")) {
+        if ( inputButtons[i].classList.contains("boutonOuvert")) {
         // si le bouton est deja ouvert, on ne fait rien
         return
     }
         // on selectionne la zone de texte
-        inputButtons[i].classList.toggle("inputWidth")
+        inputButtons[i].classList.add("inputWidth")
     })
     
 }
@@ -178,62 +211,69 @@ function modifyPlaceholder(i) {
 
 
 
-
-
-let newLiElement = []
-let newLabel = []
-let newInput = []
+// let newLiElements = []
+// let newLabels = []
+// let newInputs = []
 let listOfCheckboxes = []
 let divOfCheckboxes = []
 
-// crée les checkboxes par bloc de 10
+// crée les elements de liste par bloc de 10 pour adapter la taille de la hauteur
 
-function createListOfCheckboxes (listeName, triFormNumber){
-    divOfCheckboxes[triFormNumber] = document.createElement("div")
-    divOfCheckboxes[triFormNumber].classList.add("divOfCheckboxes")
-
-
-    listOfCheckboxes[triFormNumber] = document.createElement("ul")
-    listOfCheckboxes[triFormNumber].classList.add("listOfCheckboxes")
-
-    divOfCheckboxes[triFormNumber].appendChild(listOfCheckboxes[triFormNumber])
+for (let i = 0 ; i < triForm.length ; i++) {
+    divOfCheckboxes[i] = document.createElement("div")
+    divOfCheckboxes[i].classList.add("divOfCheckboxes")
 
 
-    if (listeName.length > 29) {
-        for (let i = 0 ; i <= 29 ; i++) {
+    listOfCheckboxes[i] = document.createElement("ul")
+    listOfCheckboxes[i].classList.add("listOfCheckboxes")
 
-            createCheckboxes(i, listeName, triFormNumber)
+    divOfCheckboxes[i].appendChild(listOfCheckboxes[i]) 
+    
+    triForm[i].appendChild(divOfCheckboxes[i])
 
-        }
-    } else if (listeName.length > 19 && listeName.length < 29) {
-        for (let i = 0 ; i <= 19 ; i++) {
-
-            createCheckboxes(i, listeName, triFormNumber)
-
-        }
-    } else {
-        for (let i = 0 ; i <= 9 ; i++) {
-
-            createCheckboxes(i, listeName, triFormNumber)
-
-        }
-
-    }
-    triForm[triFormNumber].appendChild(divOfCheckboxes[triFormNumber])
 }
 
+
+// on limite le nombre d'elements à 30
+function createListOfCheckboxes(listeName, triFormNumber){
+    if (divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si petit format on affiche max 10elements
+        for (let i = 0 ; i < 10 && i < listeName.length ; i++) {
+            createCheckboxes(i, listeName, triFormNumber)        } 
+    } else {
+        for (let i = 0 ; i < 30 && i < listeName.length ; i++) {//si non, on affiche max 30element
+            createCheckboxes(i, listeName, triFormNumber)
+        } 
+    }     
+}
+// /!\ PROBLEME au dessus, cette fonction ne se declanche qu'au click ou a l'input, si non ça créé bien la liste mais la longueur n'est pas respectée. pourquoi ?
+
+
+let clickableIng = []
+let clickableApp = []
+let clickableUs = []
+
+let listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
+// créé les checkboxes et les append aux elements de liste
 function createCheckboxes(i, listeName, triFormNumber) {
-    newLiElement[i] = document.createElement("li")
-    newLabel[i] = document.createElement("label")
-    newInput[i] = document.createElement("input")
-    newInput[i].classList.add("checkbox")
-    newInput[i].setAttribute("type", "checkbox")
-    newLabel[i].textContent = listeName[i]
-    newLiElement[i].appendChild(newLabel[i])
-    newLabel[i].appendChild(newInput[i])
+    let newLiElement = document.createElement("li")
+    let newLabel = document.createElement("label")
+    let newInput = document.createElement("input")
+    newInput.classList.add("checkbox")
+    newInput.setAttribute("type", "checkbox")
+    newLabel.textContent = listeName[i]
+    newLiElement.appendChild(newLabel)
+    newLabel.appendChild(newInput)
 
-
-    listOfCheckboxes[triFormNumber].appendChild(newLiElement[i])
+    listOfCheckboxes[triFormNumber].appendChild(newLiElement) 
+    // listOfIngAppUs.push(newLiElement[i])
+    if (newLiElement.parentElement.parentElement.parentElement.classList.contains("blue")) {
+        clickableIng.push(newLiElement)
+    } else if (newLiElement.parentElement.parentElement.parentElement.classList.contains("green")) {
+        clickableApp.push(newLiElement)
+    } else {
+        clickableUs.push(newLiElement)
+    }
+    listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
 }
 
 
@@ -242,9 +282,7 @@ createListOfCheckboxes(listeAppareils, 1)
 createListOfCheckboxes(listeUstensiles, 2)
 
 
-// crée la zone des filtres
-
-
+// crée la zone des tags
 
 const sectionRecherche = document.querySelector(".sectionRecherche")
 const sectionFiltres = document.createElement("div")
@@ -254,55 +292,122 @@ sectionRecherche.insertBefore(sectionFiltres, sectionBoutons)
 
 // ajouter les elements de tri
 
-let deleteFiltre
-let newFiltre
+// let deleteFiltre
+// let newFiltre
 
-const triElement = document.querySelectorAll("li label")
+// let triElement = []
 
-for (let i = 0 ; i < triElement.length ; i++) {
-    triElement[i].addEventListener("click", function(e) {
-        e.preventDefault() // pour ne pas créer l'element en double
+let listOfTags = []
+let deleteTags = []
+let triIng = []
+let triApp= []
+let triUs = []
+let triElement = [triIng, triApp, triUs]
 
-        createFiltre(i)    
 
-        // on recherche et supprime les element ici car c'est là qu'on les a créés
-        deleteFiltre = document.querySelectorAll(".deleteFiltre") 
-        newFiltre = document.querySelectorAll(".newFiltre")
-        for (let i = 0 ; i < deleteFiltre.length ; i++) {
-            deleteFiltre[i].addEventListener("click", function(e) {
-                e.preventDefault
-                newFiltre[i].classList.add("none")
+function createAndDeleteFilters(first, last) {
+    
+    // triElement = []
+    // console.log(triElement)
+    triElement[0] = document.querySelectorAll(".blue .listOfCheckboxes li")
+    triElement[1] = document.querySelectorAll(".green .listOfCheckboxes li")
+    triElement[2] = document.querySelectorAll(".red .listOfCheckboxes li")
+
+    // console.log(triElement[0])
+
+
+
+    for (let i = first ; i < last ; i++) {
+        // console.log(triElement[i].length)
+
+        for (let j = 0 ; j < triElement[i].length ; j++) {
+            // console.log(triElement[i][j])
+
+            triElement[i][j].addEventListener("click", function(e) {
+
+                e.preventDefault() //important
+                // e.stopPropagation()
+                // listOfIngAppUs = []
+                deleteFiltre = createFiltre(i, j)  
+                let selectedElement = triElement[i][j]
+                triElement[i][j].classList.add("none")
+        
+                // on recherche et supprime les element ici car c'est là qu'on les a créés            
+                deleteFiltre.addEventListener("click", function(e) {
+
+                    removeItemOnce(listOfTags, e.target.parentElement)
+                    removeItemOnce(deleteTags, e.target)
+
+                    selectedElement.classList.add("block")
+                    sectionFiltres.removeChild(e.target.parentElement)
+
+                    recipesToDisplay = filterRecipesTags(filterRecipesSearchBar(orderedRecipes))
+                    displayFilteredElements()
+                })
             })
-        }   
-    })
+        }
+        
+        
+    }
 }
 
-// crée les filtres et ajoute la classe couleur du parent du parent du parent..
-function createFiltre(i) {
+createAndDeleteFilters(0, triElement.length)
+
+// crée les filtres et ajoute la classe couleur du parent du parent du parent.. modifier ça si possible!
+function createFiltre(i, j) {
 
     newFiltre = document.createElement("div")
     newFiltre.classList.add("newFiltre")
-    newFiltre.textContent = triElement[i].textContent
-    if (triElement[i].parentElement.parentElement.parentElement.parentElement.classList.contains("red")) {
+    newFiltre.textContent = triElement[i][j].textContent
+    deleteFiltre = document.createElement("i")
+
+    if (triElement[i][j].parentElement.parentElement.parentElement.classList.contains("red")) {
         newFiltre.classList.add("red")
-    } else if (triElement[i].parentElement.parentElement.parentElement.parentElement.classList.contains("blue")) {
+    
+    } else if (triElement[i][j].parentElement.parentElement.parentElement.classList.contains("blue")) {
         newFiltre.classList.add("blue")
+
     } else {
         newFiltre.classList.add("green")
+
     }
-    deleteFiltre = document.createElement("i")
     deleteFiltre.classList.add("far")
     deleteFiltre.classList.add("fa-times-circle")
     deleteFiltre.classList.add("deleteFiltre")
 
 
-
-    newFiltre.appendChild(deleteFiltre)
     sectionFiltres.appendChild(newFiltre)
+    newFiltre.appendChild(deleteFiltre)
 
+    listOfTags.push(newFiltre)
+    deleteTags.push(deleteFiltre)
 
+    return deleteFiltre
 }
 
-// delete filters
+
+
+
+
+function removeItemOnce(array, value) {
+    let index = array.indexOf(value)
+    if (index > -1) {
+      array.splice(index, 1)
+    }
+    return array
+  }
+
+// création du message "Aucun reusltat" integré dans les listes d'elements si celles ci sont vides
+
+for (let i = 0 ; i < divOfCheckboxes.length ; i++ ) {
+    let messageListe = document.createElement("div")
+    messageListe.classList.add("messageListe")
+    messageListe.classList.add("none")
+
+    messageListe.textContent = "Aucun resultat.."
+    divOfCheckboxes[i].appendChild(messageListe)
+}
+
+let messageListe = document.querySelectorAll(".messageListe")
 
 
