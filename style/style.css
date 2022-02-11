@@ -20,17 +20,22 @@ a, a:hover{
 }
 
 
+button {
+    cursor: pointer;
+}
+
 body{
     max-width: 1240px;
     margin: auto;
 }
+
 
 header{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 50px;
+    padding-top: 50px;
     margin-bottom: 25px;
 } 
 
@@ -137,8 +142,13 @@ h1{
     background-color: #3282F7;
 }
 .element::placeholder{
+    color: white;
     opacity: 1;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
 
 
 #appareil, .green .divOfCheckboxes, .sectionFiltres .green{
@@ -172,7 +182,7 @@ h1{
 main{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    /* justify-content: center; */
     /* align-items: center; */
     width: 1290px;
     margin: auto;
@@ -268,10 +278,11 @@ article .txt {
 }
 
 
-
-
-
 .divOfCheckboxes{
+
+    overflow: hidden;
+
+    width: 667px;
     display: none;
     position: absolute;
     transform: translateY(-20px);
@@ -295,14 +306,23 @@ article .txt {
 
 .listOfCheckboxes li{
     width: 209px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-height: 22px;
     margin-bottom: 10px;
+    padding-right: 20px;
+
 }
 
 .listOfCheckboxes li label{
     cursor: pointer;
     line-height: 22px;
     /* padding: 8px; */
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .listOfCheckboxes li label:hover{
@@ -327,7 +347,7 @@ article .txt {
     font-weight: 700;
     line-height: 17px;
     color: white;
-    padding: 10px 10px 10px 20px;
+    padding: 10px 40px 10px 20px;
     border-radius: 5px;
 
     display: flex;
@@ -336,22 +356,50 @@ article .txt {
     justify-content: space-between;  
     margin-right: 15px;  
     margin-bottom: 15px;
+    position: relative;
 }
 
 .newFiltre .far {
+    position: absolute;
+    right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 37px;
-    width: 30px;
+    width: 40px;
     font-size: 20px;
     margin-left: 13px; 
     cursor: pointer;
 }
 
+.message {
+    margin-top: 15px;
+    color: grey;
+    font-style: italic;    
+    max-width: 810px;
+    font-family: "Lato", sans-serif ;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 21.6px;
+}
+
+.messageListe {
+    font-style: italic;
+    color: white;
+    font-family: "Lato", sans-serif;
+    max-height: 328px;
+    padding: 0 19px 10px 19px;
+    font-size: 18px;
+    line-height: 21.6px;
+    display: flex;
+    flex-wrap: wrap;
+}
 
 
 
+.borderRadius{
+    border-radius: 5px 5px 0 0;
+}
 .inputWidth {
     width: 223px;
 }
@@ -378,17 +426,19 @@ article .txt {
     body{
         padding: 0 10px;
     }
-    main {
-        width: auto;
-    }
+    
     article{
-        margin-right: 25px;
-        margin-left: 25px;
+        margin-right: 50px;
+        /* margin-left: 25px; */
     }
     .sectionRecherche{
         max-width: 810px;
         margin: auto;
-
+    }
+    main {
+        max-width: 860px;
+        /* margin: auto; */
+        transform: translateX(25px);
     }
 }
 
@@ -399,6 +449,7 @@ article .txt {
     }
     main{
         flex-direction: column;
+        transform: translateX(0);
     }
     article{
         max-width: 100%;
@@ -406,7 +457,7 @@ article .txt {
         margin-left: 0;
     }
     .boutonOuvert, .divOfCheckboxes{
-        width: 380px;
+        max-width: 380px;
     }
     .divOfCheckboxes{
         overflow-y: scroll;
