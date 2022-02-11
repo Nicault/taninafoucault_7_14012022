@@ -1,8 +1,15 @@
 
+
+
+// fonction pour enlever les accents, et carateres speciaux de la saisie et de la recherche
+function pureString(string) {
+    return string.toLowerCase().normalize('NFD').replace(new RegExp("[^(a-zA-Z)]", "g"), '')
+}
+
+
 //  créer et remplir les tableaux d'ingredients, appareil et ustensiles
 
 // ici on aurait pu utiliser new Set()
-
 
 let listeIngredients = [] 
 let listeAppareils = []
@@ -43,24 +50,16 @@ for (let recipe of recipes) {
 function fillList(listName, elementToAdd, newElement) {
 
     for (let i = 0 ; i < listName.length ; i++) {
-        if (newElement.toLowerCase() == listName[i].toLowerCase()) {
+        if (pureString(newElement) == pureString(listName[i])) {
             elementToAdd = false
             break
         }
     }
 
     if (elementToAdd) {
-        newElement = newElement.charAt(0).toUpperCase() + newElement.slice(1)
         listName.push(newElement)
     }
 }
-
-
-
-
-
-
-
 
 
 
@@ -115,6 +114,7 @@ function closeAllButtonsAndInputs() {
 function openInput(i) {
     closeAllButtonsAndInputs()
     inputButtons[i].classList.add("inputWidth")
+    
 }
 
 // specificicité de l'ouverture des listes à l'input avec bouton fermé
@@ -159,15 +159,17 @@ function openButton(i) {
 
 for (let i = 0 ; i < inputButtons.length ; i++) {
     inputButtons[i].addEventListener("click", function() {
-        if (inputButtons[i].classList.contains("boutonOuvert")) {
+        if (inputButtons[i].classList.contains("boutonOuvert") ||
+            inputButtons[i].classList.contains("inputWidth")) {
             return
         }
+
         closeAllButtonsAndInputs()
 
         for (let i = 0 ; i < inputButtons.length ; i++) {
             if (inputButtons[i].classList.contains("inputWidth")) {
                 // si une zone de texte est selectionnée, on la deselctionne
-                inputButtons[i].classList.toggle("inputWidth")
+                inputButtons[i].classList.remove("inputWidth")
             }
             // si un bouton est ouvert, on le ferme
             // if (inputButtons[i].classList.contains("boutonOuvert")){
@@ -180,7 +182,7 @@ for (let i = 0 ; i < inputButtons.length ; i++) {
         return
     }
         // on selectionne la zone de texte
-        inputButtons[i].classList.toggle("inputWidth")
+        inputButtons[i].classList.add("inputWidth")
     })
     
 }
@@ -234,17 +236,18 @@ for (let i = 0 ; i < triForm.length ; i++) {
 
 // on limite le nombre d'elements à 30
 function createListOfCheckboxes(listeName, triFormNumber){
-    if (!divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si grand format, on affiche max 30element
-        for (let i = 0 ; i < 30 && i < listeName.length ; i++) {
-            createCheckboxes(i, listeName, triFormNumber)
-        } 
+    if (divOfCheckboxes[triFormNumber].classList.contains("inputWidth")) { // on cherche ici la format de la liste à afficher. si petit format on affiche max 10elements
+        for (let i = 0 ; i < 10 && i < listeName.length ; i++) {
+            createCheckboxes(i, listeName, triFormNumber)        } 
     } else {
-        for (let i = 0 ; i < 10 && i < listeName.length ; i++) {//si petit format on affiche max 10elements
+        for (let i = 0 ; i < 30 && i < listeName.length ; i++) {//si non, on affiche max 30element
             createCheckboxes(i, listeName, triFormNumber)
         } 
-    }
-        
+    }     
 }
+// /!\ PROBLEME au dessus, cette fonction ne se declanche qu'au click ou a l'input, si non ça créé bien la liste mais la longueur n'est pas respectée. pourquoi ?
+
+
 let clickableIng = []
 let clickableApp = []
 let clickableUs = []

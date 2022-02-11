@@ -368,6 +368,7 @@ article .txt {
 }
 
 .message {
+    margin-top: 15px;
     color: grey;
     font-style: italic;    
     max-width: 810px;
