@@ -1,124 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) { // si il y a des element dans les differents tableaux d'ing app ou us, on les affiche et on masque le message d'erreur
-    if (arrayOfFiltersToDisplay[i].length > 0) {
-        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
-        messageListe[i].classList.remove("block")
-        
-    } else { // si non on affiche le message d'erreur
-        messageListe[i].classList.add("block")
-    }
-}
-
-
-
-
-// fonction qui permet d'afficher tous les elements (aucun filtre)
-
-// function displayAllElements() {
-//     console.log("all")
-
-//     // on efface tout 
-//     recipesSection.innerHTML = "" //la section recettes
-//     for (let i = 0 ; i < listOfCheckboxes.length ; i++) { // et les tableaux de filtres
-//         listOfCheckboxes[i].innerHTML = ""
-//     }    
-//     // listOfIngAppUs = [] //et on réinitialise la liste des filtres qu'on vient d'effacer car on la rerempli à chaque fois
-//     clickableIng = []
-//     clickableApp = []
-//     clickableUs = []
-
-//     listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
-//    //  on affiche tout
-//    displayData(recipes) //on display les données initiales des recettes
-
-//    arrayOfFiltersToDisplay = arrayOfOrderedFilters 
-//    for (let i = 0 ; i < inputButtons.length ; i++) { // et des filtres
-//         if (inputButtons[i].value) {
-//             createListOfCheckboxes(filterInputs(i), i)
-//         } else {
-//             createListOfCheckboxes(arrayOfFiltersToDisplay[i], i) // on crée les listes on rempli listOfIngAppUs
-//         }
-//    }
-//    createAndDeleteFilters(0, triElement.length)
-//  // on active la création des tags sur les nouvelles listes
-//  displayOnClick()
-// }
-
-
-
-
-
-// function displayFilteredElements() {
-//     console.log("fil")
-//     // on efface tout
-//     recipesSection.innerHTML = ""
-//     for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
-//         listOfCheckboxes[i].innerHTML = ""
-//     } 
- 
-//      clickableIng = []// important de vider les tableaux
-//      clickableApp = []
-//      clickableUs = []
- 
-//      listOfIngAppUs = [clickableIng, clickableApp, clickableUs]
-   
-//     // on filtre les tableaux de tags par rapport à recipesToDisplay : on ne garde que les ingredients, appareils et ustensiles présents dans la liste
-//     applianceToDisplay = filterAppliances(recipesToDisplay)
-//     ingredientsToDisplay = filterIngredients(recipesToDisplay)
-//     ustensilesToDisplay = filterUstensils(recipesToDisplay)
- 
-//     // on met à jour le tableau avec les nouvelles listes
-//     arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
-    
-    
- 
-//     // on affiche les recettes
-//     if (recipesToDisplay.length > 0) { // si il y a des element dans le tableau recipesToDisplay, on les affiche
-//         displayData(recipesToDisplay)
-//     } else { //si non on affiche le message d'erreur
-//         let message = document.createElement("div")
-//         message.classList.add("message")
-//         message.textContent = "Aucune recette ne correspond à votre recherche... Vous pouvez chercher 'tarte aux pommes', 'poisson', etc."
-//         recipesSection.appendChild(message)
-//     }
- 
-//     // on créé les listes de filtres
-//     for (let i = 0 ; i < inputButtons.length ; i++) { // si il y a des element dans les differents tableaux d'ing app ou us, on les affiche et on masque le message d'erreur
-//         if (inputButtons[i].value) {
-//             // console.log("avant" + arrayOfFiltersToDisplay[i])
-//             arrayOfFiltersToDisplay[i] = filterInputs(i)
-//             // console.log("apres" + arrayOfFiltersToDisplay[i])
-            
-//         }       
-//     }
-
-//     arrayOfFiltersToDisplay = [ingredientsToDisplay, applianceToDisplay, ustensilesToDisplay]
-
-//     for (let i = 0 ; i < inputButtons.length ; i++) { // et des filtres
-//         createListOfCheckboxes(arrayOfFiltersToDisplay[i], i) // on crée les listes on rempli listOfIngAppUs
-//     }
-   
- 
-//     createAndDeleteFilters(0, triElement.length)
-//   // on active la création des tags sur les nouvelles listes
-//     displayOnClick() // et on reactive la fonction qui affiche a click car les elemnts ont été supprimés et recréés
-
-//  } 
-
-
-
-
-
-
 function displayFilteredElements() {
     console.log("fil")
     // on efface tout
@@ -174,9 +54,6 @@ function displayFilteredElements() {
 
 
 
-
-
-
 // premier declenchement de tri : à l'input dans la search bar
 function displayOnSearchbar() {
     searchBar.addEventListener("input", function(e) { // à l'input
@@ -195,31 +72,6 @@ function displayOnSearchbar() {
     })
     
 }
-
-// function displayOnSearchbar() {
-//     searchBar.addEventListener("input", function(e) { // à l'input
-//         e.preventDefault()
-//         if (listOfTags.length > 0){ // si il y a des tags, on tri les recettes par rapport aux tags
-//             recipesToDisplay = filterRecipesTags(orderedRecipes)
-//             if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on retri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
-//                 recipesToDisplay = filterRecipesSearchBar(recipesToDisplay)
-//                 displayFilteredElements()
-//             } else { // si non on affiche directement les recette triés par rapport au tags
-//                 displayFilteredElements()
-//             }
-//         } else if (listOfTags.length == 0) { // si pas de tags
-//             if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on tri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
-//                 recipesToDisplay = filterRecipesSearchBar(orderedRecipes)
-//                 displayFilteredElements()
-//             } else { // si non on affiche tout
-//                 displayAllElements()
-//             }
-//         }
-//         displayOnClick()
-
-//     })
-    
-// }
 
 displayOnSearchbar()
 
@@ -289,4 +141,15 @@ for (let i = 0 ; i < inputButtons.length ; i++ ) { // à la saisie dans un des i
 }
 
 
+
+
+for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) { // si il y a des element dans les differents tableaux d'ing app ou us, on les affiche et on masque le message d'erreur
+    if (arrayOfFiltersToDisplay[i].length > 0) {
+        createListOfCheckboxes(arrayOfFiltersToDisplay[i], i)
+        messageListe[i].classList.remove("block")
+        
+    } else { // si non on affiche le message d'erreur
+        messageListe[i].classList.add("block")
+    }
+}
 

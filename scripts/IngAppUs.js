@@ -3,7 +3,7 @@
 
 // fonction pour enlever les accents, et carateres speciaux de la saisie et de la recherche
 function pureString(string) {
-    return string.toLowerCase().normalize('NFD').replace(new RegExp("[^(a-zA-Z)]", "g"), '')
+    return string.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
 
