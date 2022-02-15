@@ -209,17 +209,37 @@ function filterUstensils(recipesToDisplay) {
 
 // methpode de filtre avec indexOf et set
 
+// function filterRecipesSearchBar(currentOrderedRecipes) {
+//     let set = new Set()
+//     for (let i = 0 ; i < currentOrderedRecipes.length ; i++) {
+//         for (let j = 0 ; j < currentOrderedRecipes[i].ingredients.length ; j++) {
+//             if (pureString(currentOrderedRecipes[i].name).indexOf(pureString(searchBar.value)) > -1 ||
+//                 pureString(currentOrderedRecipes[i].description).indexOf(pureString(searchBar.value)) > -1  ||
+//                 pureString(currentOrderedRecipes[i].ingredients[j].ingredient).indexOf(pureString(searchBar.value)) > -1) {
+//                     set.add(currentOrderedRecipes[i])
+//             }
+//         }
+//     }   
+//     let resultsArray = [...set]
+//     return resultsArray
+// }
+
+
 function filterRecipesSearchBar(currentOrderedRecipes) {
     let set = new Set()
     for (let i = 0 ; i < currentOrderedRecipes.length ; i++) {
-        for (let j = 0 ; j < currentOrderedRecipes[i].ingredients.length ; j++) {
-            if (pureString(currentOrderedRecipes[i].name).indexOf(pureString(searchBar.value)) > -1 ||
-                pureString(currentOrderedRecipes[i].description).indexOf(pureString(searchBar.value)) > -1  ||
-                pureString(currentOrderedRecipes[i].ingredients[j].ingredient).indexOf(pureString(searchBar.value)) > -1) {
+        if (checkIfElementContains(currentOrderedRecipes[i].name) ||
+            checkIfElementContains(currentOrderedRecipes[i].description)) {
+            set.add(currentOrderedRecipes[i])
+        } else {
+            for (let l = 0 ; l < currentOrderedRecipes[i].ingredients.length ; l++) {
+                if (checkIfElementContains(currentOrderedRecipes[i].ingredients[l].ingredient)) {
                     set.add(currentOrderedRecipes[i])
+                    break
+                }
             }
         }
-    }   
+    }
     let resultsArray = [...set]
     return resultsArray
 }
@@ -227,28 +247,25 @@ function filterRecipesSearchBar(currentOrderedRecipes) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function checkIfElementContains(element) {
+    let j = 0 
+    let k = 0
+    while (j < element.length) {
+        if (pureString(element[j].toString()) == pureString(searchBar.value[k].toString())) {
+            if (k == searchBar.value.length -1) {
+                return true
+            } else {
+                j++
+                k++
+            }
+        } else if (k > 0) {
+            k = 0
+        } else {
+            j++
+        }
+    }
+    return false
+}
 
 
 
