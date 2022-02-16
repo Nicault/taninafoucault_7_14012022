@@ -248,6 +248,10 @@ function filterRecipesSearchBar(currentOrderedRecipes) {
 
 
 function checkIfElementContains(element) {
+    if (searchBar.value.length < 3) {
+        return true
+    } 
+
     let j = 0 
     let k = 0
     while (j < element.length) {
