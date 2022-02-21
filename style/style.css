@@ -50,7 +50,7 @@ header{
 
 h1{
     font-family: 'DM Sans', sans-serif;
-    font-weight: 700px;
+    font-weight: 700;
     font-size: 36px;
     line-height: 46.87px;
     text-align: center;
@@ -79,7 +79,7 @@ h1{
     padding-right: 69px;
 
     font-family: 'Lato', sans-serif;
-    font-weight: 400pxpx;
+    font-weight: 400;
     font-size: 18px;
     line-height: 21.6px;
 
@@ -138,7 +138,7 @@ h1{
     font-family: 'Lato', sans-serif;
     color: white;
     font-size: 18px;
-    font-weight: 700px;
+    font-weight: 700;
     line-height: 21.6px;
     padding: 20px;
 
@@ -238,7 +238,7 @@ article .txt {
 .nom{
     font-family: "Lato", sans-serif ;
     font-size: 18px;
-    font-weight: 400px;
+    font-weight: 400;
     line-height: 21.6px;
     max-width: 250px;
     margin-bottom: 0;
@@ -248,7 +248,7 @@ article .txt {
 .temps{
     font-family: "Lato", sans-serif ;
     font-size: 18px;
-    font-weight: 700px;
+    font-weight: 700;
     line-height: 21.6px;
     /* position: absolute; */
     /* right: 20px; */
@@ -258,7 +258,7 @@ article .txt {
 .content{
     display: flex;
     justify-content: space-between;
-    font-weight: 400px;
+    font-weight: 400;
     font-size: 12px;
     width: 100%;
     /* padding-bottom: 20px; */
@@ -278,7 +278,7 @@ article .txt {
 
 
 .ingredientNom{
-    font-weight: 700px;
+    font-weight: 700;
 }
 
 .recette{
@@ -341,7 +341,7 @@ article .txt {
 }
 
 .listOfCheckboxes li label:hover{
-    font-weight: 700px;
+    font-weight: 700;
 }
 
 .checkbox{
@@ -359,7 +359,7 @@ article .txt {
 .newFiltre{
     font-family: 'Lato', sans-serif;
     font-size: 14px;
-    font-weight: 700px;
+    font-weight: 700;
     line-height: 17px;
     color: white;
     padding: 10px 40px 10px 20px;
@@ -394,7 +394,7 @@ article .txt {
     max-width: 810px;
     font-family: "Lato", sans-serif ;
     font-size: 16px;
-    font-weight: 400px;
+    font-weight: 400;
     line-height: 21.6px;
 }
 
@@ -529,7 +529,7 @@ article .txt {
         scrollbar-width: thin;
     }
     .listOfCheckboxes li label:hover{
-        font-weight: 400pxpx;
+        font-weight: 400;
     }
     /* .listeOfCheckboxes > :last-child{
         padding-bottom: 10px;
