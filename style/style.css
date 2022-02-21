@@ -186,8 +186,9 @@ input[type="search"]::-webkit-search-cancel-button {
 
 
 main{
-    display: flex;
-    flex-wrap: wrap;
+
+    display: grid;
+    grid-template-columns: repeat(3, 33%);
     justify-content: space-between;
     /* align-items: center; */
     max-width: 1290px;
@@ -437,8 +438,16 @@ article .txt {
 }
 
 @media screen and (max-width: 1240px){
+    main {
+        display: flex;
+        flex-wrap: wrap;
+    }
     article{
         width : 48%;
+    }
+    .ingredientsListe, .recette {
+        max-width: 50%;
+        width: 50%;
     }
 
 }
@@ -452,10 +461,7 @@ article .txt {
         
         /* margin-left: 25px; */
     }
-    .ingredientsListe, .recette {
-        max-width: 50%;
-        width: 50%;
-    }
+  
     .sectionRecherche{
         max-width: 100%;
         margin: auto;
