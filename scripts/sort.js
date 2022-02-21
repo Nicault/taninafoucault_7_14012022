@@ -119,7 +119,6 @@ for (let i = 0 ; i < arrayOfFiltersToDisplay.length ; i++) { // si il y a des el
 
 
 function displayFilteredElements() {
-    console.log("fil")
     // on efface tout
     recipesSection.innerHTML = ""
     for (let i = 0 ; i < listOfCheckboxes.length ; i++) {
@@ -195,34 +194,7 @@ function displayOnSearchbar() {
     
 }
 
-// function displayOnSearchbar() {
-//     searchBar.addEventListener("input", function(e) { // à l'input
-//         e.preventDefault()
-//         if (listOfTags.length > 0){ // si il y a des tags, on tri les recettes par rapport aux tags
-//             recipesToDisplay = filterRecipesTags(orderedRecipes)
-//             if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on retri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
-//                 recipesToDisplay = filterRecipesSearchBar(recipesToDisplay)
-//                 displayFilteredElements()
-//             } else { // si non on affiche directement les recette triés par rapport au tags
-//                 displayFilteredElements()
-//             }
-//         } else if (listOfTags.length == 0) { // si pas de tags
-//             if (searchBar.value.length > 2 ) { // si au moins 3 caracteres on tri les recipesToDisplay par rapport à la saisie dans la barre de recherche puis on affiche
-//                 recipesToDisplay = filterRecipesSearchBar(orderedRecipes)
-//                 displayFilteredElements()
-//             } else { // si non on affiche tout
-//                 displayAllElements()
-//             }
-//         }
-//         displayOnClick()
-
-//     })
-    
-// }
-
 displayOnSearchbar()
-
-
 
 
 

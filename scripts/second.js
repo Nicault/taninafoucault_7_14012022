@@ -39,36 +39,101 @@ let arrayOfOrderedFilters = [orderedIngredients, orderedAppareils, orderedUstens
 
 
 // fonctions qui permettent de trier les listes qui ont été dupliquées
-function orderRecipes(data) {
-    let orderedData = data.sort((a,b) => {
-        if (pureString(a.name) < pureString(b.name)) {
-            return -1
 
-        } else if (pureString(a.name) > pureString(b.name)) {
-            return 1
 
-        } else {
-            return 0
-        }
-    })
-    return orderedData
+// bubble sort avec boucle while et for 
+
+function orderRecipes(array) {
+	let swapped = true;
+	do {
+		swapped = false;
+		for (let i = 0; i < array.length-1; i++) {
+			if (pureString(array[i].name) > pureString(array[i + 1].name)) {
+				let temp = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = temp;
+				swapped = true;
+			}
+		}
+	} while (swapped);
+	return array;
 }
 
-function order(data) {
-    let orderedData = data.sort((a,b) => {
-        if (pureString(a) < pureString(b)) {
-            return -1
 
-        } else if (pureString(a) > pureString(b)) {
-            return 1
-
-        } else {
-            return 0
-        }
-    })
-    return orderedData
+function order(array) {
+	let swapped = true;
+	do {
+		swapped = false;
+		for (let j = 0; j < array.length-1; j++) {
+			if (pureString(array[j]) > pureString(array[j + 1])) {
+				let temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+				swapped = true;
+			}
+		}
+	} while (swapped);
+	return array;
 }
 
+
+
+
+
+
+// quickSort
+
+// function orderRecipes(array) {
+//     if (array.length == 1) {
+//         return array
+//     }
+//     let pivot = array[array.length - 1]
+//     let leftArray = []
+//     let rightArray = []
+
+//     for (let i = 0 ; i < array.length - 1 ; i++) {
+//         if (pureString(array[i].name) < pureString(pivot.name)) {
+//             leftArray.push(array[i])
+//         } else {
+//             rightArray.push(array[i])
+//         }
+//     }
+//     console.log(leftArray)
+
+//     if (leftArray.length > 0 && rightArray.length > 0) {
+//         return [...orderRecipes(leftArray), pivot, ...orderRecipes(rightArray)]
+//     } else if (leftArray.length > 0) {
+//         return [...orderRecipes(leftArray), pivot]
+//     } else {
+//         return [pivot, ...orderRecipes(rightArray)]
+//     }
+// }
+
+// function order(array) {
+//     if (array.length == 1) {
+//         return array
+//     }
+
+//     let pivot = pureString(array[array.length - 1])
+//     let leftArray = []
+//     let rightArray = []
+
+//     for (let i = 0 ; i < array.length - 1 ; i++) {
+//         if (pureString(array[i]) < pivot) {
+//             leftArray.push(array[i])
+//         } else {
+//             rightArray.push(array[i])
+//         }
+//     }
+
+//     if (leftArray.length > 0 && rightArray.length > 0) {
+//         return [...order(leftArray), pivot, ...order(rightArray)]
+//     } else if (leftArray.length > 0) {
+//         return [...order(leftArray), pivot]
+//     } else {
+//         return [pivot, ...order(rightArray)]
+//     }
+// }
 
 
 // on crée les variables de tableaux triés
@@ -128,16 +193,90 @@ function filterUstensils(recipesToDisplay) {
 
 // filtre les recettes via searchbar
 
-function filterRecipesSearchBar(currentOrderedRecipes) {
-    let resultsArray = currentOrderedRecipes
+// function filterRecipesSearchBar(currentOrderedRecipes) {
+//     let resultsArray = currentOrderedRecipes
   
-    // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
-     resultsArray = resultsArray.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
-                                                   pureString(element.description).includes(pureString(searchBar.value)) || 
-                                                   element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
+//     // via la barre de reherche (si on tape dans la barre de recherche une partie du nom, des ingredients, ou de la description, on garde)
+//      resultsArray = resultsArray.filter(element => pureString(element.name).includes(pureString(searchBar.value)) ||
+//                                                    pureString(element.description).includes(pureString(searchBar.value)) || 
+//                                                    element.ingredients.some(el => pureString(el.ingredient).includes(pureString(searchBar.value))))  
 
-    return resultsArray   
+//     return resultsArray   
+// }
+
+
+
+
+// methpode de filtre avec indexOf et set
+
+// function filterRecipesSearchBar(currentOrderedRecipes) {
+//     let set = new Set()
+//     for (let i = 0 ; i < currentOrderedRecipes.length ; i++) {
+//         for (let j = 0 ; j < currentOrderedRecipes[i].ingredients.length ; j++) {
+//             if (pureString(currentOrderedRecipes[i].name).indexOf(pureString(searchBar.value)) > -1 ||
+//                 pureString(currentOrderedRecipes[i].description).indexOf(pureString(searchBar.value)) > -1  ||
+//                 pureString(currentOrderedRecipes[i].ingredients[j].ingredient).indexOf(pureString(searchBar.value)) > -1) {
+//                     set.add(currentOrderedRecipes[i])
+//             }
+//         }
+//     }   
+//     let resultsArray = [...set]
+//     return resultsArray
+// }
+
+
+function filterRecipesSearchBar(currentOrderedRecipes) {
+    let set = new Set()
+    for (let i = 0 ; i < currentOrderedRecipes.length ; i++) {
+        if (checkIfElementContains(currentOrderedRecipes[i].name) ||
+            checkIfElementContains(currentOrderedRecipes[i].description)) {
+            set.add(currentOrderedRecipes[i])
+        } else {
+            for (let l = 0 ; l < currentOrderedRecipes[i].ingredients.length ; l++) {
+                if (checkIfElementContains(currentOrderedRecipes[i].ingredients[l].ingredient)) {
+                    set.add(currentOrderedRecipes[i])
+                    break
+                }
+            }
+        }
+    }
+    let resultsArray = [...set]
+    return resultsArray
 }
+
+
+function checkIfElementContains(element) {
+    if (searchBar.value.length < 3) {
+        return true
+    } 
+
+    let j = 0 
+    let k = 0
+    while (j < element.length) {
+        if (pureString(element[j].toString()) == pureString(searchBar.value[k].toString())) {
+            if (k == searchBar.value.length -1) {
+                return true
+            } else {
+                j++
+                k++
+            }
+        } else if (k > 0) {
+            k = 0
+        } else {
+            j++
+        }
+    }
+    return false
+}
+
+
+
+
+
+
+
+
+
 
 // filtre les recettes via les tags (en fonction de la catégorie des tags, si une recette correspond, on garde)
   
@@ -162,7 +301,9 @@ function filterRecipesTags(currentOrderedRecipes) {
 // filtre les listes par rapport à l'input
 function filterInputs(i) { 
     let resultsArray = arrayOfFiltersToDisplay[i] 
+    console.log(resultsArray)      
     resultsArray = resultsArray.filter(element => pureString(element).includes(pureString(inputButtons[i].value)))
+    console.log(resultsArray)      
 
     return resultsArray
 }

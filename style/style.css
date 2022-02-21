@@ -27,6 +27,7 @@ button {
 body{
     max-width: 1240px;
     margin: auto;
+    padding: 0 10px;
 }
 
 
@@ -49,11 +50,16 @@ header{
 
 h1{
     font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
+    font-weight: 700px;
     font-size: 36px;
     line-height: 46.87px;
     text-align: center;
     color: #D04F4F;
+}
+
+.sectionRecherche{
+    display: flex;
+    flex-direction: column;
 }
 
 .recherche{
@@ -73,7 +79,7 @@ h1{
     padding-right: 69px;
 
     font-family: 'Lato', sans-serif;
-    font-weight: 400px;
+    font-weight: 400pxpx;
     font-size: 18px;
     line-height: 21.6px;
 
@@ -132,7 +138,7 @@ h1{
     font-family: 'Lato', sans-serif;
     color: white;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 700px;
     line-height: 21.6px;
     padding: 20px;
 
@@ -182,9 +188,10 @@ input[type="search"]::-webkit-search-cancel-button {
 main{
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: center; */
+    justify-content: space-between;
     /* align-items: center; */
-    width: 1290px;
+    max-width: 1290px;
+    overflow: hidden;
     margin: auto;
 }
 
@@ -192,11 +199,13 @@ main{
 article{
     height: 364px;
     width: 380px;
+    /* min-width: 360px; */
     border-radius: 5px;
     position: relative;
     padding: 0 !important;
+    /* flex-wrap: wrap; */
     /* overflow: hidden; */
-    margin-right: 50px;
+    /* margin-right: 50px; */
     margin-bottom: 50px;
 }
 
@@ -215,41 +224,46 @@ article .txt {
     position: absolute;
     bottom: 0;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .header{
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     margin-bottom: 20px;
+    min-height: 25px;
 }
 .nom{
     font-family: "Lato", sans-serif ;
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 400px;
     line-height: 21.6px;
     max-width: 250px;
     margin-bottom: 0;
-    position: absolute;
+    /* position: absolute; */
 }
 
 .temps{
     font-family: "Lato", sans-serif ;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 700px;
     line-height: 21.6px;
-    position: absolute;
-    right: 20px;
+    /* position: absolute; */
+    /* right: 20px; */
 
 }
 
 .content{
     display: flex;
     justify-content: space-between;
-    font-weight: 400;
+    font-weight: 400px;
     font-size: 12px;
-    width: 340px;
-    position: absolute;
-    bottom: 20px;
+    width: 100%;
+    /* padding-bottom: 20px; */
+    /* position: absolute; */
+    /* bottom: 20px; */
 }
 
 .ingredientsListe{
@@ -264,12 +278,13 @@ article .txt {
 
 
 .ingredientNom{
-    font-weight: 700;
+    font-weight: 700px;
 }
 
 .recette{
-    position: absolute;
-    right: 0px;
+    /* position: absolute; */
+    /* right: 0px; */
+
     width: 171px;
     font-family: "Roboto", sans-serif;
     line-height: 12px;
@@ -326,7 +341,7 @@ article .txt {
 }
 
 .listOfCheckboxes li label:hover{
-    font-weight: 700;
+    font-weight: 700px;
 }
 
 .checkbox{
@@ -344,7 +359,7 @@ article .txt {
 .newFiltre{
     font-family: 'Lato', sans-serif;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 700px;
     line-height: 17px;
     color: white;
     padding: 10px 40px 10px 20px;
@@ -379,7 +394,7 @@ article .txt {
     max-width: 810px;
     font-family: "Lato", sans-serif ;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 400px;
     line-height: 21.6px;
 }
 
@@ -421,40 +436,90 @@ article .txt {
     display: block;
 }
 
-
-@media screen and (max-width: 1281px){
-    body{
-        padding: 0 10px;
+@media screen and (max-width: 1240px){
+    article{
+        width : 48%;
     }
+
+}
+@media screen and (max-width: 992px){
+  
     
     article{
-        margin-right: 50px;
+        /* width : 45%; */
+        margin-right: 10px;
+        justify-content: space-between;
+        
         /* margin-left: 25px; */
     }
+    .ingredientsListe, .recette {
+        max-width: 50%;
+        width: 50%;
+    }
     .sectionRecherche{
-        max-width: 810px;
+        max-width: 100%;
         margin: auto;
     }
     main {
-        max-width: 860px;
+        width: 100%;
+        /* max-width: 860px; */
         /* margin: auto; */
-        transform: translateX(25px);
+        /* transform: translateX(25px); */
     }
 }
 
-@media screen and (max-width: 910px) {
-  
+@media screen and (max-width: 780px) {
+    
     .sectionRecherche, main{
-        max-width: 380px;
+        width: 100%;
+        /* align-items: center; */
+    }
+    .recherche{
+        width: 100%;
     }
     main{
         flex-direction: column;
+        align-items: flex-start;
         transform: translateX(0);
     }
     article{
+        width: 100%;
+        /* height: 340px; */
+        /* margin-right: 0;
+        margin-left: 0; */
+    }
+    .content{
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100px;
+    }
+
+    .ingredientsListe, .recette {
         max-width: 100%;
-        margin-right: 0;
-        margin-left: 0;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .ingredientsListe{
+        flex-direction: row;
+        /* justify-content: space-between; */
+        max-height: 27px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+    }
+    .ingredientLi{
+        height: 12px;
+        margin-right: 10px;
+    }
+
+    .recette{
+        bottom: 0;
+        max-height: 50px;
+        /* white-space: nowrap; */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* left: 0; */
     }
     .boutonOuvert, .divOfCheckboxes{
         max-width: 380px;
@@ -464,7 +529,7 @@ article .txt {
         scrollbar-width: thin;
     }
     .listOfCheckboxes li label:hover{
-        font-weight: 400;
+        font-weight: 400pxpx;
     }
     /* .listeOfCheckboxes > :last-child{
         padding-bottom: 10px;
