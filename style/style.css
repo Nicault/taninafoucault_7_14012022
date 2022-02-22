@@ -9,6 +9,10 @@
     margin: 0px;
 }
 
+html {
+    overflow-y:scroll;
+}
+
 ul, li {
     padding: 0;
     margin: 0;
@@ -194,6 +198,10 @@ main{
     max-width: 1290px;
     overflow: hidden;
     margin: auto;
+}
+
+main .message {
+    width: 1290px;
 }
 
 
@@ -441,6 +449,9 @@ article .txt {
     main {
         display: flex;
         flex-wrap: wrap;
+    }
+    main .message {
+        width: 100%;
     }
     article{
         width : 48%;
