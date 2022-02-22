@@ -7,6 +7,7 @@
     font-weight: normal;
     padding: 0px;
     margin: 0px;
+
 }
 
 html {
@@ -95,8 +96,8 @@ h1{
 #searchBar::placeholder{
     opacity: 0.25;
     white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #searchButton{
@@ -123,6 +124,7 @@ h1{
     height: 69px;
     width: 170px;
     border-radius: 5px;
+
 }
 
 .boutonOuvert{
@@ -540,6 +542,7 @@ article .txt {
     }
     .boutonOuvert, .divOfCheckboxes{
         max-width: 380px;
+
     }
     .divOfCheckboxes{
         overflow-y: scroll;

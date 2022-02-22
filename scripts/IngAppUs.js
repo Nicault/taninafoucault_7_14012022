@@ -1,6 +1,3 @@
-
-
-
 // fonction pour enlever les accents, et carateres speciaux de la saisie et de la recherche
 function pureString(string) {
     return string.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -332,8 +329,12 @@ function createAndDeleteFilters(first, last) {
                 let selectedElement = triElement[i][j]
                 triElement[i][j].classList.add("none")
         
-                // on recherche et supprime les element ici car c'est là qu'on les a créés            
+                // on recherche et supprime les element ici car c'est là qu'on les a créés  
+                
+
+                // on ajoute le stop propagation pour la non fermeture des listes au click sur le deleteFiltre
                 deleteFiltre.addEventListener("click", function(e) {
+                    e.stopPropagation()
 
                     removeItemOnce(listOfTags, e.target.parentElement)
                     removeItemOnce(deleteTags, e.target)
@@ -382,6 +383,11 @@ function createFiltre(i, j) {
     listOfTags.push(newFiltre)
     deleteTags.push(deleteFiltre)
 
+    // on ajoute le stop propagation pour la non fermeture des listes au click sur le newFiltre
+    newFiltre.addEventListener("click", function(e) {
+        e.stopPropagation()
+    })
+
     return deleteFiltre
 }
 
@@ -411,3 +417,21 @@ for (let i = 0 ; i < divOfCheckboxes.length ; i++ ) {
 let messageListe = document.querySelectorAll(".messageListe")
 
 
+
+
+
+
+// fermer les listes au click sur la page
+
+let elements = document.querySelectorAll(".element, .divOfCheckboxes, .openButton, #searchBar, #searchButton")
+
+for (let i = 0 ; i < elements.length ; i++) {
+    elements[i].addEventListener("click", function(e) {
+        e.stopPropagation()
+    })
+}
+
+let body = document.querySelector("body")
+body.addEventListener("click", function() {
+    closeAllButtonsAndInputs()
+})
