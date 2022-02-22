@@ -72,7 +72,6 @@ function displayOnSearchbar() {
         // displayOnClick()
 
     })
-    
 }
 
 displayOnSearchbar()

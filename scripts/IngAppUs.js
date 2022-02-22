@@ -431,7 +431,7 @@ for (let i = 0 ; i < elements.length ; i++) {
     })
 }
 
-let body = document.querySelector("body")
-body.addEventListener("click", function() {
+let html = document.querySelector("html")
+html.addEventListener("click", function() {
     closeAllButtonsAndInputs()
 })
